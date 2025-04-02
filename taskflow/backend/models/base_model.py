@@ -6,7 +6,7 @@ from datetime import datetime
 from enum import Enum
 
 
-class BaseModel(Base):
+class BaseModel(Base, db.Model):
     """Defines all common attributes and methods for all the other classes."""
     __abstract__ = True
 
