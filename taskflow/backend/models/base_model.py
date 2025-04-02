@@ -44,7 +44,7 @@ class BaseModel(Base, db.Model):
         """Returns a dict with object attributes."""
         dict_rep = {}
         for key, value in self.__dict__.items():
-            if not key.startswith("_"):
+            if not key.startswith("_") and key != "password":
                 if isinstance(value, datetime):
                     value = value.isoformat()
                 elif isinstance(value, Enum):
