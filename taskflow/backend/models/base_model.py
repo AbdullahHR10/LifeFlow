@@ -1,15 +1,17 @@
+"""Module that contains BaseModel."""
 from backend import Base, db
 from sqlalchemy import Column, String, DateTime
 from uuid import uuid4
 from datetime import datetime
 from enum import Enum
 
+
 class BaseModel(Base):
     """Defines all common attributes and methods for all the other classes."""
     __abstract__ = True
 
     id = Column(String(36), nullable=False, primary_key=True,
-            default=lambda: str(uuid4()))
+                default=lambda: str(uuid4()))
     created_at = Column(DateTime, nullable=False, default=datetime.now)
     updated_at = Column(DateTime, nullable=False, default=datetime.now)
 
