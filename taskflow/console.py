@@ -2,11 +2,13 @@
 import cmd
 from backend.models.base_model import BaseModel
 from backend.models.user import User
+from backend.models.task import Task
 from backend.app import app
 
 classes = {
     "BaseModel": BaseModel,
-    "User": User
+    "User": User,
+    "Task": Task
     }
 
 class TaskflowShell(cmd.Cmd):
@@ -117,7 +119,7 @@ class TaskflowShell(cmd.Cmd):
                           f" with ID: {instance_id} **")
                     return
                 instance.delete()
-                print("(INFO) ** Instance {instance_id} from {class_name}"
+                print(f"(INFO) ** Instance {instance_id} from {class_name}"
                       " has been deleted **")
             except Exception as e:
                 print(f"(ERROR) ** Failed to delete instance of the class: {e} **")
