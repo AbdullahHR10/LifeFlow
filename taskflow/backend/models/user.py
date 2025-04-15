@@ -13,3 +13,5 @@ class User(BaseModel, UserMixin):
     password = Column(String(255), nullable=False)
 
     tasks = relationship("Task", back_populates="user")
+    habits = relationship("Habit", back_populates="user")
+    notes = relationship("Note", back_populates="user")
