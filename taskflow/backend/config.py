@@ -17,3 +17,9 @@ class Config():
         level=logging.DEBUG,
         format="%(asctime)s - %(levelname)s - %(message)s"
         )
+
+class TestConfig():
+    """Configuration for testing the Flask application."""
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
