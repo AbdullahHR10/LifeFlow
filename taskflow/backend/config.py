@@ -21,6 +21,6 @@ class Config():
 class TestConfig():
     """Configuration for testing the Flask application."""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SESSION_TYPE = "filesystem"
