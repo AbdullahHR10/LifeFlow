@@ -23,4 +23,7 @@ class TestConfig():
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SESSION_TYPE = "filesystem"
+    SESSION_TYPE = "redis"
+    SESSION_PERMANENT = False
+    SESSION_KEY_PREFIX = "taskflow_test:"
+    SESSION_REDIS = Redis(host="localhost", port=6379)
