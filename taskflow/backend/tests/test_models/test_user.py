@@ -50,6 +50,18 @@ class TestUserClass(unittest.TestCase):
         self.assertIsInstance(self.user.name, str)
         self.assertEqual(self.user.name, "testuser")
 
+    def test_name_long(self):
+        """Tests the User class's name if it's too long."""
+        with self.assertRaises(ValueError) as context:
+            self.user.name = "a" * 31
+        self.assertIn("name must be between 3 and 30 characters", str(context.exception))
+
+    def test_name_short(self):
+        """Tests the User class's name if it's too short."""
+        with self.assertRaises(ValueError) as context:
+            self.user.name = "aa"
+        self.assertIn("name must be between 3 and 30 characters", str(context.exception))
+
     def test_email(self):
         """Tests the User class's email"""
         self.assertIsInstance(self.user.email, str)
