@@ -47,7 +47,7 @@ class User(BaseModel, UserMixin):
             ValueError: If the name is not between 3 and 30 characters.
         """
         if len(value) > 30 or len(value) < 3:
-            raise ValueError(f"{key} must be between 3 and 30 characters")
+            raise ValueError(f"{key} must be between 3 and 30 characters.")
 
         return value
 
