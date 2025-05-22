@@ -3,6 +3,7 @@
 import unittest
 from backend import create_app, db
 from backend.models.user import User
+from backend.utils import ensure_datetime_fields
 
 
 class TestUserClass(unittest.TestCase):
@@ -58,7 +59,8 @@ class TestUserClass(unittest.TestCase):
         """
         with self.assertRaises(ValueError) as context:
             self.user.name = "a" * 31
-        self.assertIn("name must be between 3 and 30 characters", str(context.exception))
+        self.assertIn("name must be between 3 and 30 characters",
+                      str(context.exception))
 
     def test_name_if_too_short(self):
         """
@@ -69,7 +71,8 @@ class TestUserClass(unittest.TestCase):
         """
         with self.assertRaises(ValueError) as context:
             self.user.name = "aa"
-        self.assertIn("name must be between 3 and 30 characters", str(context.exception))
+        self.assertIn("name must be between 3 and 30 characters",
+                      str(context.exception))
 
     def test_valid_email(self):
         """Tests that a valid email passes validation."""
@@ -83,11 +86,13 @@ class TestUserClass(unittest.TestCase):
         Tests the user's email when it lacks exactly one '@' symbol.
 
         Raises:
-            ValueError: If the email does not contain exactly one '@' character.
+            ValueError: If the email does not contain exactly
+            one '@' character.
         """
         with self.assertRaises(ValueError) as context:
             self.user.email = "aa"
-        self.assertIn("email must contain exactly one '@' character.", str(context.exception))
+        self.assertIn("email must contain exactly one '@' character.",
+                      str(context.exception))
 
     def test_email_cannot_start_or_end_with_at(self):
         """
@@ -98,7 +103,8 @@ class TestUserClass(unittest.TestCase):
         """
         with self.assertRaises(ValueError) as context:
             self.user.email = "@"
-        self.assertIn("email cannot start or end with '@'.", str(context.exception))
+        self.assertIn("email cannot start or end with '@'.",
+                      str(context.exception))
 
     def test_email_cannot_start_or_end_with_dot(self):
         """
@@ -109,7 +115,8 @@ class TestUserClass(unittest.TestCase):
         """
         with self.assertRaises(ValueError) as context:
             self.user.email = "a@."
-        self.assertIn("email cannot start or end with '.'.", str(context.exception))
+        self.assertIn("email cannot start or end with '.'.",
+                      str(context.exception))
 
     def test_email_cannot_contain_consecutive_dots(self):
         """
@@ -120,7 +127,8 @@ class TestUserClass(unittest.TestCase):
         """
         with self.assertRaises(ValueError) as context:
             self.user.email = "a@..com"
-        self.assertIn("email cannot contain consecutive dots ('..').", str(context.exception))
+        self.assertIn("email cannot contain consecutive dots ('..').",
+                      str(context.exception))
 
     def test_email_must_have_dot_after_at(self):
         """
@@ -131,10 +139,12 @@ class TestUserClass(unittest.TestCase):
         """
         with self.assertRaises(ValueError) as context:
             self.user.email = "a.a@com"
-        self.assertIn("email must contain a dot ('.') after the '@'.", str(context.exception))
+        self.assertIn("email must contain a dot ('.') after the '@'.",
+                      str(context.exception))
 
     def test_password_hashing_and_validation(self):
-        """Tests that the user's password is hashed and validated correctly."""
+        """Tests that the user's password is hashed
+        and validated correctly."""
         self.assertTrue(self.user.check_password("123456"))
         self.assertFalse(self.user.check_password("wrongpassword"))
         self.assertNotEqual(self.user._password, "123456")
@@ -143,6 +153,46 @@ class TestUserClass(unittest.TestCase):
         """Tests that accessing raw password raises AttributeError."""
         with self.assertRaises(AttributeError):
             _ = self.user.password
+
+    def test_save_method(self):
+        """Tests that the save method adds and commits
+        the user instance to the database."""
+        ensure_datetime_fields(self.user)
+        self.user.save()
+        retrived = db.session.get(User, self.user.id)
+        self.assertIsNotNone(retrived)
+        self.assertEqual(retrived.name, self.user.name)
+        self.assertEqual(retrived.email, self.user.email)
+
+    def test_delete_method(self):
+        """Tests that the save method adds and commits
+        the user instance to the database."""
+        ensure_datetime_fields(self.user)
+        self.user.save()
+        self.user.delete()
+        retrived = db.session.get(User, self.user.id)
+        self.assertIsNone(retrived)
+
+    def test_to_dict_method(self):
+        """Tests that the to_dict method returns a dict
+        with object attributes."""
+        expected_dict = {
+            "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            "created_at": "2025-05-01 22:00:00",
+            "updated_at": "2025-05-02 18:12:00",
+            "name": "testuser",
+            "email": "testemail@example.com",
+        }
+        self.assertEqual(self.user.to_dict(), expected_dict)
+        self.assertNotIn("_password", self.user.to_dict())
+
+    def test_str_method(self):
+        """Tests that the __str__ method returns a
+        string representation of the object."""
+        dict_rep = self.user.to_dict()
+        expected_str = f"[User] ({self.user.id}) {dict_rep}"
+        self.assertEqual(self.user.__str__(), expected_str)
+
 
 if __name__ == "__main__":
     unittest.main()
