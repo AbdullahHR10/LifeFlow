@@ -51,24 +51,15 @@ class TestUserClass(unittest.TestCase):
         self.assertEqual(self.user.name, "testuser")
 
     def test_name_if_too_long(self):
-        """
-        Tests the user's name if it's too long.
-
-        Raises:
-            ValueError: if the name is too long.
-        """
+        """Tests that setting the user's name too long raises a ValueError."""
         with self.assertRaises(ValueError) as context:
             self.user.name = "a" * 31
         self.assertIn("name must be between 3 and 30 characters",
                       str(context.exception))
 
     def test_name_if_too_short(self):
-        """
-        Tests the user's name if it's too short.
-
-        Raises:
-            ValueError: if the name is too short.
-        """
+        """Tests that setting the user's name too short
+        raises a ValueError."""
         with self.assertRaises(ValueError) as context:
             self.user.name = "aa"
         self.assertIn("name must be between 3 and 30 characters",
@@ -81,62 +72,68 @@ class TestUserClass(unittest.TestCase):
         except ValueError:
             self.fail("Valid email raised ValueError unexpectedly.")
 
-    def test_email_must_have_exactly_one_at_symbol(self):
+    def test_unique_email(self):
         """
-        Tests the user's email when it lacks exactly one '@' symbol.
+        Verifies that cloning a user with a unique email
+        successfully creates and saves a new user.
+        """
+        ensure_datetime_fields(self.user)
+        self.user.save()
+        user_2 = self.user.clone(email="unique@example.com", password="123456")
+        self.assertIsNotNone(user_2.id)
+        self.assertIsNotNone(user_2)
+        self.assertEqual(user_2.email, "unique@example.com")
 
-        Raises:
-            ValueError: If the email does not contain exactly
-            one '@' character.
+    def test_not_unique_email(self):
         """
+        Verifies that cloning a user with a duplicate email
+        raises an ValueError upon saving.
+        """
+        ensure_datetime_fields(self.user)
+        self.user.save()
+        with self.assertRaises(ValueError) as context:
+            _ = self.user.clone(password="newpassword", email=self.user.email)
+            self.assertIn(
+                f"'email' value '{self.user.email}' already exists. "
+                f"Must provide a unique value.",
+                str(context.exception)
+            )
+
+    def test_email_must_have_exactly_one_at_symbol(self):
+        """Tests that setting an email without exactly one '@'
+        character raises a ValueError."""
         with self.assertRaises(ValueError) as context:
             self.user.email = "aa"
         self.assertIn("email must contain exactly one '@' character.",
                       str(context.exception))
 
     def test_email_cannot_start_or_end_with_at(self):
-        """
-        Tests the user's email when it starts or ends with '@'.
-
-        Raises:
-            ValueError: If the email starts or ends with '@'.
-        """
+        """Tests that setting an email starting or ending with '@'
+        raises a ValueError."""
         with self.assertRaises(ValueError) as context:
             self.user.email = "@"
         self.assertIn("email cannot start or end with '@'.",
                       str(context.exception))
 
     def test_email_cannot_start_or_end_with_dot(self):
-        """
-        Tests the user's email when it starts or ends with '.'.
-
-        Raises:
-            ValueError: If the email starts or ends with '.'.
-        """
+        """Tests that setting an email starting or ending with '.'
+        raises a ValueError."""
         with self.assertRaises(ValueError) as context:
             self.user.email = "a@."
         self.assertIn("email cannot start or end with '.'.",
                       str(context.exception))
 
     def test_email_cannot_contain_consecutive_dots(self):
-        """
-        Tests the user's email when it contains consecutive dots ('..').
-
-        Raises:
-            ValueError: If the email contains consecutive dots ('..').
-        """
+        """Tests that setting an email containing consecutive dots ('..')
+        raises a ValueError."""
         with self.assertRaises(ValueError) as context:
             self.user.email = "a@..com"
         self.assertIn("email cannot contain consecutive dots ('..').",
                       str(context.exception))
 
     def test_email_must_have_dot_after_at(self):
-        """
-        Tests the user's email when there is no '.' after the '@'.
-
-        Raises:
-            ValueError: If the email lacks a dot ('.') after the '@'.
-        """
+        """Tests that setting an email lacking a dot ('.') after the '@'
+        raises a ValueError."""
         with self.assertRaises(ValueError) as context:
             self.user.email = "a.a@com"
         self.assertIn("email must contain a dot ('.') after the '@'.",
@@ -165,8 +162,8 @@ class TestUserClass(unittest.TestCase):
         self.assertEqual(retrived.email, self.user.email)
 
     def test_delete_method(self):
-        """Tests that the save method adds and commits
-        the user instance to the database."""
+        """Tests that the delete method removes
+        the user instance from the database."""
         ensure_datetime_fields(self.user)
         self.user.save()
         self.user.delete()
