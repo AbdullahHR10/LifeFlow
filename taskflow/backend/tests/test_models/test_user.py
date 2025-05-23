@@ -3,7 +3,7 @@
 import unittest
 from backend import create_app, db
 from backend.models.user import User
-from backend.utils import ensure_datetime_fields
+from backend.utils.datetime_utils import ensure_datetime_fields
 
 
 class TestUserClass(unittest.TestCase):
@@ -189,6 +189,16 @@ class TestUserClass(unittest.TestCase):
         dict_rep = self.user.to_dict()
         expected_str = f"[User] ({self.user.id}) {dict_rep}"
         self.assertEqual(self.user.__str__(), expected_str)
+
+    def test_clone_method(self):
+        """Tests the the clone method."""
+        user_2 = self.user.clone(email="unique@example.com", password="123456")
+        self.assertNotEqual(user_2.id, self.user.id)
+        self.assertNotEqual(user_2.created_at, self.user.created_at)
+        self.assertNotEqual(user_2.updated_at, self.user.updated_at)
+        self.assertNotEqual(user_2.email, self.user.email)
+
+        self.assertEqual(user_2.name, self.user.name)
 
 
 if __name__ == "__main__":
