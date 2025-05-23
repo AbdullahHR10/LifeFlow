@@ -5,7 +5,7 @@ from sqlalchemy.inspection import inspect
 from uuid import uuid4
 from datetime import datetime, date
 from enum import Enum
-from backend.utils import ensure_datetime_fields
+from backend.utils.datetime_utils import ensure_datetime_fields
 
 
 class BaseModel(Base, db.Model):
@@ -118,7 +118,9 @@ class BaseModel(Base, db.Model):
             if field == "password":
                 continue
             if cls.query.filter(getattr(cls, field) == data[field]).first():
-                raise ValueError(f"'{field}' value '{data[field]}' already exists. Must provide a unique value.")
+                raise ValueError(
+                    f"'{field}' value '{data[field]}' already exists. "
+                    f"Must provide a unique value.")
 
         instance = cls(**data)
         if cls.__name__ == "User":
