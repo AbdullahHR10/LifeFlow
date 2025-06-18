@@ -1,28 +1,12 @@
-"""Moudle that contains the Task class."""
+"""Module that contains the Task class."""
 from .base_model import BaseModel
 from sqlalchemy import (Column,
-                        String, Text, Date, Boolean,
+                        String, Text, Date, DateTime, Boolean,
                         Enum as SqlEnum, ForeignKey)
 from sqlalchemy.orm import relationship
 from enum import Enum
-
-
-class Priority(Enum):
-    """Task priority enum."""
-    LOW = "Low"
-    MEDIUM = "Medium"
-    HIGH = "High"
-    CRITICAL = "Critical"
-
-
-class Category(Enum):
-    """Task category enum."""
-    WORK = "Work"
-    PERSONAL = "Personal"
-    STUDY = "Study"
-    HEALTH = "Health"
-    HOBBY = "Hobby"
-    OTHER = "Other"
+from datetime import datetime
+from ..utils.enums import Priority, Category
 
 
 class Task(BaseModel):
@@ -34,7 +18,26 @@ class Task(BaseModel):
     deadline = Column(Date, nullable=False)
     completed = Column(Boolean, nullable=False, default=False)
     category = Column(SqlEnum(Category, name="category_enum"), nullable=False)
-    completed_at = Column(Date, nullable=True)
+    completed_at = Column(DateTime, nullable=True)
 
     user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
     user = relationship("User", back_populates="tasks")
+
+    def mark_complete(self):
+        """Marks the task as completed."""
+        self.completed = True
+        self.completed_at = datetime.now()
+        self.save()
+
+    def mark_incomplete(self):
+        """Marks the task as incomplete."""
+        self.completed = False
+        self.completed_at = None
+        self.save()
+
+    def update_task(self, **kwargs):
+        """Updates task fields with provided keyword arguments."""
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+        self.save()
