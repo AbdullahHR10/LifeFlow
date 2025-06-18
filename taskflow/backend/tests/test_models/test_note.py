@@ -5,7 +5,6 @@ from backend import create_app, db
 from backend.models.user import User
 from backend.models.note import Note
 from backend.utils.enums import BackgroundColor
-from datetime import date
 
 
 class TestNoteClass(unittest.TestCase):
