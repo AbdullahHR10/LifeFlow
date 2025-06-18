@@ -2,6 +2,7 @@
 import os
 import logging
 
+
 class Config():
     """Configuration for the Flask application."""
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI')
@@ -12,6 +13,7 @@ class Config():
         level=logging.DEBUG,
         format="%(asctime)s - %(levelname)s - %(message)s"
         )
+
 
 class TestConfig():
     """Configuration for testing the Flask application."""
