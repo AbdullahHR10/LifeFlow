@@ -27,6 +27,7 @@ class BaseModel(Base, db.Model):
         self.id = str(uuid4())
         self.created_at = datetime.now().isoformat()
         self.updated_at = self.created_at
+
         if kwargs:
             for key, value in kwargs.items():
                 if key != "__class__":
@@ -36,11 +37,14 @@ class BaseModel(Base, db.Model):
                         value = value.value
                     setattr(self, key, value)
 
-    def save(self):
+    def save(self, refresh=False):
         """Saves the object to the database."""
         self.updated_at = datetime.now()
+        ensure_datetime_fields(self)
         db.session.add(self)
         db.session.commit()
+        if refresh:
+            db.session.refresh(self)
 
     def delete(self):
         """Deletes the object from the database."""
@@ -65,67 +69,3 @@ class BaseModel(Base, db.Model):
         """Returns a string representation of the object."""
         dict_rep = self.to_dict()
         return f"[{self.__class__.__name__}] ({self.id}) {dict_rep}"
-
-    def clone(self, **overrides):
-        """
-        Creates a copy of the model instance with optional field overrides.
-        Enforces overriding of fields with unique constraints
-        to avoid database conflicts.
-
-        Args:
-            **overrides: Field-value pairs to override in the cloned instance.
-
-        Returns:
-            A new instance of the same class with copied
-            (and overridden) field values.
-
-        Raises:
-            ValueError: If any field with a unique constraint or 'password'
-            is not overridden.
-        """
-        cls = self.__class__
-        mapper = inspect(cls)
-        data = {}
-        unique_fields = []
-
-        for column in mapper.columns:
-            if column.name in ("id", "created_at", "updated_at", "password"):
-                continue
-            if column.unique:
-                unique_fields.append(column.name)
-            data[column.name] = getattr(self, column.name)
-
-        mandatory_fields = unique_fields
-        if cls.__name__ == "User":
-            mandatory_fields.append("password")
-
-        missing_overrides = [field for field in mandatory_fields
-                             if field not in overrides]
-
-        if missing_overrides:
-            raise ValueError(f"Must override unique field(s): "
-                             f"{', '.join(missing_overrides)}")
-
-        password_plain = None
-        if cls.__name__ == "User":
-            if "password" not in overrides:
-                raise ValueError("Must override 'password' field for User")
-            password_plain = overrides.pop("password")
-
-        data.update(overrides)
-
-        for field in unique_fields:
-            if field == "password":
-                continue
-            if cls.query.filter(getattr(cls, field) == data[field]).first():
-                raise ValueError(
-                    f"'{field}' value '{data[field]}' already exists. "
-                    f"Must provide a unique value.")
-
-        instance = cls(**data)
-        if cls.__name__ == "User":
-            instance.password = password_plain
-
-        ensure_datetime_fields(instance)
-        instance.save()
-        return instance
