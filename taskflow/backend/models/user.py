@@ -25,7 +25,8 @@ class User(BaseModel, UserMixin):
     @password.setter
     def password(self, plain_password):
         """Hashes and sets the password."""
-        self._password = bcrypt.generate_password_hash(plain_password).decode('utf-8')
+        self._password = bcrypt.generate_password_hash(
+            plain_password).decode('utf-8')
 
     def check_password(self, input_password):
         """Checks the user's password."""
