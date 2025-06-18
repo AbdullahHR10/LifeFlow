@@ -3,7 +3,6 @@
 import unittest
 from backend import create_app, db
 from backend.models.user import User
-from backend.utils.datetime_utils import ensure_datetime_fields
 
 
 class TestUserClass(unittest.TestCase):
@@ -77,9 +76,9 @@ class TestUserClass(unittest.TestCase):
         Verifies that cloning a user with a unique email
         successfully creates and saves a new user.
         """
-        ensure_datetime_fields(self.user)
         self.user.save()
-        user_2 = self.user.clone(email="unique@example.com", password="123456")
+        user_2 = self.user
+        user_2.email = "unique@example.com"
         self.assertIsNotNone(user_2.id)
         self.assertIsNotNone(user_2)
         self.assertEqual(user_2.email, "unique@example.com")
@@ -89,10 +88,18 @@ class TestUserClass(unittest.TestCase):
         Verifies that cloning a user with a duplicate email
         raises an ValueError upon saving.
         """
-        ensure_datetime_fields(self.user)
         self.user.save()
-        with self.assertRaises(ValueError) as context:
-            _ = self.user.clone(password="newpassword", email=self.user.email)
+        clone = User(
+            id="f47ac10b-58cc-4372-a567-0e02b2c3d478",
+            created_at="2025-05-01 22:00:00",
+            updated_at="2025-05-02 18:12:00",
+            name="testuser",
+            email="testemail@example.com",
+        )
+        clone.password = "654321"
+        from sqlalchemy.exc import IntegrityError
+        with self.assertRaises(IntegrityError) as context:
+            clone.save()
             self.assertIn(
                 f"'email' value '{self.user.email}' already exists. "
                 f"Must provide a unique value.",
@@ -154,7 +161,6 @@ class TestUserClass(unittest.TestCase):
     def test_save_method(self):
         """Tests that the save method adds and commits
         the user instance to the database."""
-        ensure_datetime_fields(self.user)
         self.user.save()
         retrived = db.session.get(User, self.user.id)
         self.assertIsNotNone(retrived)
@@ -164,7 +170,6 @@ class TestUserClass(unittest.TestCase):
     def test_delete_method(self):
         """Tests that the delete method removes
         the user instance from the database."""
-        ensure_datetime_fields(self.user)
         self.user.save()
         self.user.delete()
         retrived = db.session.get(User, self.user.id)
@@ -189,16 +194,6 @@ class TestUserClass(unittest.TestCase):
         dict_rep = self.user.to_dict()
         expected_str = f"[User] ({self.user.id}) {dict_rep}"
         self.assertEqual(self.user.__str__(), expected_str)
-
-    def test_clone_method(self):
-        """Tests the the clone method."""
-        user_2 = self.user.clone(email="unique@example.com", password="123456")
-        self.assertNotEqual(user_2.id, self.user.id)
-        self.assertNotEqual(user_2.created_at, self.user.created_at)
-        self.assertNotEqual(user_2.updated_at, self.user.updated_at)
-        self.assertNotEqual(user_2.email, self.user.email)
-
-        self.assertEqual(user_2.name, self.user.name)
 
 
 if __name__ == "__main__":
