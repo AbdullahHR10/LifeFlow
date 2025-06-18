@@ -1,7 +1,6 @@
 """Module that contains BaseModel."""
 from backend import Base, db
 from sqlalchemy import Column, String, DateTime
-from sqlalchemy.inspection import inspect
 from uuid import uuid4
 from datetime import datetime, date
 from enum import Enum
