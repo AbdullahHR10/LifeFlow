@@ -3,7 +3,8 @@
 import unittest
 from backend import create_app, db
 from backend.models.user import User
-from backend.models.task import Task, Priority, Category
+from backend.models.task import Task
+from backend.utils.enums import Category, Priority
 from datetime import date
 
 
