@@ -5,7 +5,7 @@ from sqlalchemy.inspection import inspect
 from uuid import uuid4
 from datetime import datetime, date
 from enum import Enum
-from taskflow.backend.utils.converters import str_to_datetime
+from backend.utils.converters import str_to_datetime
 
 
 class BaseModel(Base, db.Model):
