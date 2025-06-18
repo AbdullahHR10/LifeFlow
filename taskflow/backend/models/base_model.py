@@ -5,7 +5,7 @@ from sqlalchemy.inspection import inspect
 from uuid import uuid4
 from datetime import datetime, date
 from enum import Enum
-from backend.utils.datetime_utils import ensure_datetime_fields
+from taskflow.backend.utils.converters import str_to_datetime
 
 
 class BaseModel(Base, db.Model):
@@ -40,7 +40,7 @@ class BaseModel(Base, db.Model):
     def save(self, refresh=False):
         """Saves the object to the database."""
         self.updated_at = datetime.now()
-        ensure_datetime_fields(self)
+        str_to_datetime(self)
         db.session.add(self)
         db.session.commit()
         if refresh:
