@@ -1,18 +1,25 @@
 """Module that contains Taskflow's shell."""
 import cmd
+import shlex
 from backend.models.base_model import BaseModel
 from backend.models.user import User
 from backend.models.task import Task
+from backend.models.note import Note
+from backend.models.habit import Habit
 from backend.app import app
+from datetime import datetime
+from backend.utils.coverters import string_to_bool
 
 classes = {
     "BaseModel": BaseModel,
     "User": User,
-    "Task": Task
+    "Task": Task,
+    "Habit": Habit,
+    "Note": Note
     }
 
 class TaskflowShell(cmd.Cmd):
-    """Taskflow's shell."""
+    """TaskFlow's shell."""
     intro = "Welcome to the Taskflow Shell. type help to list commands.\n"
     prompt = "(taskflow) "
 
@@ -31,7 +38,7 @@ class TaskflowShell(cmd.Cmd):
         if not arg:
             print("(ERROR) ** Class name missing **")
         else:
-            args = arg.split()
+            args = args = shlex.split(arg)
             if args[0] not in classes:
                 print("(ERROR) ** Class doesn't exist **")
                 return
@@ -42,6 +49,12 @@ class TaskflowShell(cmd.Cmd):
                 for param in args[1:]:
                     if "=" in param:
                         key, value = param.split("=", 1)
+                        if key == "completed":
+                            value = bool(string_to_bool(value))
+                        elif key in ("completed_at", "deadline"):
+                            value = datetime.strptime(value, "%Y-%m-%d")
+                        elif key == "priority":
+                            value = value.capitalize()
                         params[key] = value
                 cls = classes[class_name]
                 instance = cls(**params)
@@ -62,12 +75,12 @@ class TaskflowShell(cmd.Cmd):
         if not arg:
             print("(ERROR) ** Class name missing **")
 
-        args = arg.split()
+        args = args = shlex.split(arg)
         if args[0] not in classes:
             print("(ERROR) ** Class doesn't exist **")
             return
         if len(args) < 2:
-            print("(ERROR) ** Instance ID missing for class: {class_name} **")
+            print("(ERROR) ** Instance ID missing **")
             return
 
         class_name = args[0]
@@ -94,13 +107,13 @@ class TaskflowShell(cmd.Cmd):
             print("(ERROR) ** Class name missing **")
             return
 
-        args = arg.split()
+        args = args = shlex.split(arg)
         if args[0] not in classes:
             print("(ERROR) ** Class doesn't exist **")
             return
 
         if len(args) < 2:
-            print("(ERROR) ** Instance ID missing for class: {class_name} **")
+            print(f"(ERROR) ** Instance ID missing**")
             return
 
         class_name = args[0]
@@ -124,13 +137,42 @@ class TaskflowShell(cmd.Cmd):
             except Exception as e:
                 print(f"(ERROR) ** Failed to delete instance of the class: {e} **")
 
+
+    def do_truncate(self, arg):
+        """Deletes all instances of a class."""
+        if not arg:
+            print("(ERROR) ** Class name missing **")
+            return
+
+        args = args = shlex.split(arg)
+        if args[0] not in classes:
+            print("(ERROR) ** Class doesn't exist **")
+            return
+
+        class_name = args[0]
+        cls = classes[class_name]
+        if class_name == "BaseModel":
+            print("(ERROR) ** Cannot delete instances of an abstract class: "
+                    f"{class_name} **")
+            return
+
+        with app.app_context():
+            try:
+                instances = cls.query.all()
+                [instance.delete() for instance in instances]
+                print(f"(INFO) ** All instances of {class_name}"
+                      " have been truncated **")
+            except Exception as e:
+                print(f"(ERROR) ** Failed to truncate the class: {e} **")
+
     def do_all(self, arg):
         """Prints all string representation of all instances
         based on the class name."""
         if not arg:
             print("(ERROR) ** Class name missing **")
+            return
 
-        args = arg.split()
+        args = args = shlex.split(arg)
         if args[0] not in classes:
             print("(ERROR) ** Class doesn't exist **")
             return
@@ -159,7 +201,7 @@ class TaskflowShell(cmd.Cmd):
             print("(ERROR) ** Class name missing **")
             return
 
-        args = arg.split()
+        args = args = shlex.split(arg)
         if args[0] not in classes:
             print("(ERROR) ** Class doesn't exist **")
             return
@@ -209,7 +251,7 @@ class TaskflowShell(cmd.Cmd):
         if not arg:
             print("(ERROR) ** Class name missing **")
             return
-        args = arg.split()
+        args = args = shlex.split(arg)
         if args[0] not in classes:
             print("(ERROR) ** Class doesn't exist **")
             return
