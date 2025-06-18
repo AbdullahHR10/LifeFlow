@@ -4,7 +4,6 @@ from sqlalchemy import (Column,
                         String, Text, Date, DateTime, Boolean,
                         Enum as SqlEnum, ForeignKey)
 from sqlalchemy.orm import relationship
-from enum import Enum
 from datetime import datetime
 from ..utils.enums import Priority, Category
 
