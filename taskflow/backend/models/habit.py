@@ -3,8 +3,7 @@ from .base_model import BaseModel
 from sqlalchemy import (Column, String, Integer, Date, Boolean,
                         ForeignKey, Enum as SqlEnum)
 from sqlalchemy.orm import relationship
-from ..utils.enums import BackgroundColor
-from ..utils.enums import Priority, Category
+from ..utils.enums import BackgroundColor, Priority, Category
 
 
 class Habit(BaseModel):
