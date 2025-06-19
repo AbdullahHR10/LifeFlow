@@ -9,11 +9,6 @@ class Config():
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.environ.get('SECRET_KEY')
 
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format="%(asctime)s - %(levelname)s - %(message)s"
-        )
-
 
 class TestConfig():
     """Configuration for testing the Flask application."""
