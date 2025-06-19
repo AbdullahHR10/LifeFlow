@@ -10,7 +10,7 @@ class Habit(BaseModel):
     """Represents a habit in the application."""
     __tablename__ = "habits"
 
-    name = Column(String(100), nullable=False)
+    title = Column(String(100), nullable=False)
     description = Column(String(255), nullable=True)
     frequency = Column(String(50), nullable=False)
     target_count = Column(Integer, nullable=False)
