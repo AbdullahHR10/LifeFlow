@@ -5,7 +5,7 @@ from backend import create_app, db
 from backend.models.user import User
 from backend.models.habit import Habit
 from backend.utils.enums import BackgroundColor, Priority, Category
-from datetime import date
+from datetime import datetime, date
 
 
 class TestHabitClass(unittest.TestCase):
@@ -18,16 +18,10 @@ class TestHabitClass(unittest.TestCase):
         db.create_all()
         self.client = self.app.test_client()
         self.user = User(
-            id="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            created_at="2025-05-01 22:00:00",
-            updated_at="2025-05-02 18:12:00",
             name="testuser",
             email="testemail@example.com"
         )
         self.habit = Habit(
-            id="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            created_at="2025-05-01 22:00:00",
-            updated_at="2025-05-02 18:12:00",
             title="Test habit",
             description="Test habit description",
             frequency=1,
@@ -37,7 +31,7 @@ class TestHabitClass(unittest.TestCase):
             last_completed=date(2025, 5, 1),
             priority=Priority.HIGH,
             category=Category.WORK,
-            is_active=True,     
+            is_active=True,
             background_color=BackgroundColor.BLUE,
             user_id=self.user.id
         )
@@ -51,17 +45,14 @@ class TestHabitClass(unittest.TestCase):
     def test_id(self):
         """Tests that the habit's id is correct."""
         self.assertIsInstance(self.habit.id, str)
-        self.assertEqual(self.habit.id, "f47ac10b-58cc-4372-a567-0e02b2c3d479")
 
     def test_created_at(self):
         """Tests the habit's created_at if it's correct."""
-        self.assertIsInstance(self.habit.created_at, str)
-        self.assertEqual(self.habit.created_at, "2025-05-01 22:00:00")
+        self.assertIsInstance(self.habit.created_at, datetime)
 
     def test_updated_at(self):
         """Tests the habit's updated_at if it's correct."""
-        self.assertIsInstance(self.habit.updated_at, str)
-        self.assertEqual(self.habit.updated_at, "2025-05-02 18:12:00")
+        self.assertIsInstance(self.habit.updated_at, datetime)
 
     def test_title(self):
         """Tests the habit's title if it's correct."""
@@ -91,7 +82,8 @@ class TestHabitClass(unittest.TestCase):
         self.assertIsNotNone(retrived)
         self.assertEqual(retrived.title, self.habit.title)
         self.assertEqual(retrived.description, self.habit.description)
-        self.assertEqual(retrived.background_color, self.habit.background_color)
+        self.assertEqual(retrived.background_color,
+                         self.habit.background_color)
 
     def test_delete_method(self):
         """Tests that the delete method removes
@@ -108,19 +100,20 @@ class TestHabitClass(unittest.TestCase):
         """Tests that the to_dict method returns a dict
         with object attributes."""
         expected_dict = {
-            "id" :"f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            "created_at": "2025-05-01 22:00:00",
-            "updated_at": "2025-05-02 18:12:00",
+            "id": self.habit.id,
+            "created_at": self.habit.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            "updated_at": self.habit.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
             "title": "Test habit",
-            "description":"Test habit description",
+            "description": "Test habit description",
             "frequency": 1,
             "target_count": 1,
             "current_streak": 1,
             "longest_streak": 1,
-            "last_completed": "2025-05-01",
+            "last_completed": self.habit.last_completed.strftime(
+                '%Y-%m-%d') if self.habit.last_completed else None,
             "priority": Priority.HIGH.value,
             "category": Category.WORK.value,
-            "is_active": True,     
+            "is_active": True,
             "background_color": BackgroundColor.BLUE.value,
             "user_id": self.user.id
         }

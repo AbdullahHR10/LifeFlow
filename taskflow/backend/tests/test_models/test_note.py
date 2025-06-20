@@ -5,6 +5,7 @@ from backend import create_app, db
 from backend.models.user import User
 from backend.models.note import Note
 from backend.utils.enums import BackgroundColor
+from datetime import datetime
 
 
 class TestNoteClass(unittest.TestCase):
@@ -17,16 +18,10 @@ class TestNoteClass(unittest.TestCase):
         db.create_all()
         self.client = self.app.test_client()
         self.user = User(
-            id="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            created_at="2025-05-01 22:00:00",
-            updated_at="2025-05-02 18:12:00",
             name="testuser",
             email="testemail@example.com"
         )
         self.note = Note(
-            id="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            created_at="2025-05-01 22:00:00",
-            updated_at="2025-05-02 18:12:00",
             title="Test note",
             content="Test note content",
             background_color=BackgroundColor.BLUE,
@@ -42,17 +37,14 @@ class TestNoteClass(unittest.TestCase):
     def test_id(self):
         """Tests that the note's id is correct."""
         self.assertIsInstance(self.note.id, str)
-        self.assertEqual(self.note.id, "f47ac10b-58cc-4372-a567-0e02b2c3d479")
 
     def test_created_at(self):
         """Tests the note's created_at if it's correct."""
-        self.assertIsInstance(self.note.created_at, str)
-        self.assertEqual(self.note.created_at, "2025-05-01 22:00:00")
+        self.assertIsInstance(self.note.created_at, datetime)
 
     def test_updated_at(self):
         """Tests the note's updated_at if it's correct."""
-        self.assertIsInstance(self.note.updated_at, str)
-        self.assertEqual(self.note.updated_at, "2025-05-02 18:12:00")
+        self.assertIsInstance(self.note.updated_at, datetime)
 
     def test_title(self):
         """Tests the note's title if it's correct."""
@@ -95,13 +87,13 @@ class TestNoteClass(unittest.TestCase):
         """Tests that the to_dict method returns a dict
         with object attributes."""
         expected_dict = {
-            "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            "created_at": "2025-05-01 22:00:00",
-            "updated_at": "2025-05-02 18:12:00",
+            "id": self.note.id,
+            "created_at": self.note.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            "updated_at": self.note.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
             "title": "Test note",
             "content": "Test note content",
             "background_color": BackgroundColor.BLUE.value,
-            "user_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+            "user_id": self.user.id
         }
         self.assertEqual(self.note.to_dict(), expected_dict)
 

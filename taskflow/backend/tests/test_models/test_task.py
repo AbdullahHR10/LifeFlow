@@ -5,7 +5,7 @@ from backend import create_app, db
 from backend.models.user import User
 from backend.models.task import Task
 from backend.utils.enums import Category, Priority
-from datetime import date
+from datetime import datetime, date
 
 
 class TestTaskClass(unittest.TestCase):
@@ -18,16 +18,10 @@ class TestTaskClass(unittest.TestCase):
         db.create_all()
         self.client = self.app.test_client()
         self.user = User(
-            id="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            created_at="2025-05-01 22:00:00",
-            updated_at="2025-05-02 18:12:00",
             name="testuser",
             email="testemail@example.com"
         )
         self.task = Task(
-            id="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            created_at="2025-05-01 22:00:00",
-            updated_at="2025-05-02 18:12:00",
             title="Test task",
             description="Test task description",
             priority=Priority.HIGH,
@@ -46,17 +40,14 @@ class TestTaskClass(unittest.TestCase):
     def test_id(self):
         """Tests that the task's id is correct."""
         self.assertIsInstance(self.task.id, str)
-        self.assertEqual(self.task.id, "f47ac10b-58cc-4372-a567-0e02b2c3d479")
 
     def test_created_at(self):
         """Tests the task's created_at if it's correct."""
-        self.assertIsInstance(self.task.created_at, str)
-        self.assertEqual(self.task.created_at, "2025-05-01 22:00:00")
+        self.assertIsInstance(self.task.created_at, datetime)
 
     def test_updated_at(self):
         """Tests the task's updated_at if it's correct."""
-        self.assertIsInstance(self.task.updated_at, str)
-        self.assertEqual(self.task.updated_at, "2025-05-02 18:12:00")
+        self.assertIsInstance(self.task.updated_at, datetime)
 
     def test_title(self):
         """Tests the task's title if it's correct."""
@@ -128,16 +119,16 @@ class TestTaskClass(unittest.TestCase):
         """Tests that the to_dict method returns a dict
         with object attributes."""
         expected_dict = {
-            "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            "created_at": "2025-05-01 22:00:00",
-            "updated_at": "2025-05-02 18:12:00",
+            "id": self.task.id,
+            "created_at": self.task.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            "updated_at": self.task.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
             "title": "Test task",
             "description": "Test task description",
             "priority": Priority.HIGH.value,
             "deadline": "2025-05-01",
             "completed": False,
             "category": Category.WORK.value,
-            "user_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+            "user_id": self.user.id
         }
         self.assertEqual(self.task.to_dict(), expected_dict)
 

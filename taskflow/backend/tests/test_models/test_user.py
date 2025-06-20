@@ -3,21 +3,23 @@
 import unittest
 from backend import create_app, db
 from backend.models.user import User
+import logging
+from backend.utils.logger import logger
+from datetime import datetime
 
 
 class TestUserClass(unittest.TestCase):
     """Unit tests for the User model."""
     def setUp(self):
         """Sets up the Flask app and database for all tests."""
+        self._original_log_level = logger.level
+        logger.setLevel(logging.CRITICAL)
         self.app = create_app("testing")
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
         self.client = self.app.test_client()
         self.user = User(
-            id="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            created_at="2025-05-01 22:00:00",
-            updated_at="2025-05-02 18:12:00",
             name="testuser",
             email="testemail@example.com",
         )
@@ -25,6 +27,7 @@ class TestUserClass(unittest.TestCase):
 
     def tearDown(self):
         """Tears down the Flask app and database after the tests."""
+        logger.setLevel(self._original_log_level)
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
@@ -32,17 +35,14 @@ class TestUserClass(unittest.TestCase):
     def test_id(self):
         """Tests that the user's id is correct."""
         self.assertIsInstance(self.user.id, str)
-        self.assertEqual(self.user.id, "f47ac10b-58cc-4372-a567-0e02b2c3d479")
 
     def test_created_at(self):
         """Tests the user's created_at if it's correct."""
-        self.assertIsInstance(self.user.created_at, str)
-        self.assertEqual(self.user.created_at, "2025-05-01 22:00:00")
+        self.assertIsInstance(self.user.created_at, datetime)
 
     def test_updated_at(self):
         """Tests the user's updated_at if it's correct."""
-        self.assertIsInstance(self.user.updated_at, str)
-        self.assertEqual(self.user.updated_at, "2025-05-02 18:12:00")
+        self.assertIsInstance(self.user.updated_at, datetime)
 
     def test_valid_name(self):
         """Tests that a valid name passes validation."""
@@ -76,9 +76,12 @@ class TestUserClass(unittest.TestCase):
         Verifies that cloning a user with a unique email
         successfully creates and saves a new user.
         """
-        self.user.save()
-        user_2 = self.user
-        user_2.email = "unique@example.com"
+        user_2 = User(
+            name="testuser",
+            email="unique@example.com"
+        )
+        user_2.password = "abcdef"
+        user_2.save()
         self.assertIsNotNone(user_2.id)
         self.assertIsNotNone(user_2)
         self.assertEqual(user_2.email, "unique@example.com")
@@ -90,9 +93,6 @@ class TestUserClass(unittest.TestCase):
         """
         self.user.save()
         clone = User(
-            id="f47ac10b-58cc-4372-a567-0e02b2c3d478",
-            created_at="2025-05-01 22:00:00",
-            updated_at="2025-05-02 18:12:00",
             name="testuser",
             email="testemail@example.com",
         )
@@ -166,6 +166,7 @@ class TestUserClass(unittest.TestCase):
         self.assertIsNotNone(retrived)
         self.assertEqual(retrived.name, self.user.name)
         self.assertEqual(retrived.email, self.user.email)
+        self.assertNotEqual(retrived.updated_at, retrived.created_at)
 
     def test_delete_method(self):
         """Tests that the delete method removes
@@ -179,9 +180,9 @@ class TestUserClass(unittest.TestCase):
         """Tests that the to_dict method returns a dict
         with object attributes."""
         expected_dict = {
-            "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            "created_at": "2025-05-01 22:00:00",
-            "updated_at": "2025-05-02 18:12:00",
+            "id": self.user.id,
+            "created_at": self.user.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            "updated_at": self.user.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
             "name": "testuser",
             "email": "testemail@example.com",
         }
