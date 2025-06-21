@@ -1,7 +1,27 @@
 """Module that contains database helpers."""
 
-from flask import request
+from flask import abort, request
 from flask_login import current_user
+from .response import json_response
+
+
+def get_object(model: type, obj_id: str) -> object:
+    """
+    Retrieves an object by ID and ensures it belongs to the current user.
+
+    Args:
+        model (type): The model class to query.
+        obj_id (str): The ID of the object to retrieve.
+
+    Returns:
+        object: The authorized object instance.
+    """
+    obj = model.query.get(obj_id)
+
+    if not obj or obj.user_id != current_user.id:
+        abort(404)
+
+    return obj
 
 
 def build_object(model: type, keys: list[str]) -> object:
