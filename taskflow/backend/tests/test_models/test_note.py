@@ -1,38 +1,24 @@
 """Module that contains the Note class unittests."""
 
 import unittest
-from backend import create_app, db
-from backend.models.user import User
+from backend.tests.base_test import BaseTestCase
+from backend import db
 from backend.models.note import Note
 from backend.utils.enums import BackgroundColor
 from datetime import datetime
 
 
-class TestNoteClass(unittest.TestCase):
+class TestNoteClass(BaseTestCase):
     """Unit tests for the Note model."""
     def setUp(self):
-        """Sets up the flask app and database for all tests."""
-        self.app = create_app("testing")
-        self.app_context = self.app.app_context()
-        self.app_context.push()
-        db.create_all()
-        self.client = self.app.test_client()
-        self.user = User(
-            name="testuser",
-            email="testemail@example.com"
-        )
+        """Extends setup with additional test-specific configurations."""
+        super().setUp()
         self.note = Note(
             title="Test note",
             content="Test note content",
             background_color=BackgroundColor.BLUE,
             user_id=self.user.id
         )
-
-    def tearDown(self):
-        """Tears down the Flask app and database after the tests."""
-        db.session.remove()
-        db.drop_all()
-        self.app_context.pop()
 
     def test_id(self):
         """Tests that the note's id is correct."""

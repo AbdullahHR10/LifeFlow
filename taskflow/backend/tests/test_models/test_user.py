@@ -1,36 +1,26 @@
 """Module that contains the User class unittests."""
 
 import unittest
-from backend import create_app, db
+from backend.tests.base_test import BaseTestCase
+from backend import db
 from backend.models.user import User
 import logging
 from backend.utils.logger import logger
 from datetime import datetime
 
 
-class TestUserClass(unittest.TestCase):
+class TestUserClass(BaseTestCase):
     """Unit tests for the User model."""
     def setUp(self):
-        """Sets up the Flask app and database for all tests."""
+        """Extends setup with additional test-specific configurations."""
+        super().setUp()
+        self.user.password = "123456"
         self._original_log_level = logger.level
         logger.setLevel(logging.CRITICAL)
-        self.app = create_app("testing")
-        self.app_context = self.app.app_context()
-        self.app_context.push()
-        db.create_all()
-        self.client = self.app.test_client()
-        self.user = User(
-            name="testuser",
-            email="testemail@example.com",
-        )
-        self.user.password = "123456"
 
     def tearDown(self):
-        """Tears down the Flask app and database after the tests."""
+        """Restores the original logger level after tests."""
         logger.setLevel(self._original_log_level)
-        db.session.remove()
-        db.drop_all()
-        self.app_context.pop()
 
     def test_id(self):
         """Tests that the user's id is correct."""

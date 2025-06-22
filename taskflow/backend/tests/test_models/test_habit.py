@@ -1,26 +1,18 @@
 """Module that contains the Habit class unittests."""
 
 import unittest
-from backend import create_app, db
-from backend.models.user import User
+from backend.tests.base_test import BaseTestCase
+from backend import db
 from backend.models.habit import Habit
 from backend.utils.enums import BackgroundColor, Priority, Category
 from datetime import datetime, date
 
 
-class TestHabitClass(unittest.TestCase):
+class TestHabitClass(BaseTestCase):
     """Unit tests for the Habit model."""
     def setUp(self):
-        """Sets up the flask app and database for all tests."""
-        self.app = create_app("testing")
-        self.app_context = self.app.app_context()
-        self.app_context.push()
-        db.create_all()
-        self.client = self.app.test_client()
-        self.user = User(
-            name="testuser",
-            email="testemail@example.com"
-        )
+        """Extends setup with additional test-specific configurations."""
+        super().setUp()
         self.habit = Habit(
             title="Test habit",
             description="Test habit description",
@@ -35,12 +27,6 @@ class TestHabitClass(unittest.TestCase):
             background_color=BackgroundColor.BLUE,
             user_id=self.user.id
         )
-
-    def tearDown(self):
-        """Tears down the Flask app and database after the tests."""
-        db.session.remove()
-        db.drop_all()
-        self.app_context.pop()
 
     def test_id(self):
         """Tests that the habit's id is correct."""

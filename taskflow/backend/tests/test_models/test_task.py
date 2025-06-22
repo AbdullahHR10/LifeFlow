@@ -1,26 +1,18 @@
 """Module that contains the Task class unittests."""
 
 import unittest
-from backend import create_app, db
-from backend.models.user import User
+from backend.tests.base_test import BaseTestCase
+from backend import db
 from backend.models.task import Task
 from backend.utils.enums import Category, Priority
 from datetime import datetime, date
 
 
-class TestTaskClass(unittest.TestCase):
+class TestTaskClass(BaseTestCase):
     """Unit tests for the Task model."""
     def setUp(self):
-        """Sets up the flask app and database for all tests."""
-        self.app = create_app("testing")
-        self.app_context = self.app.app_context()
-        self.app_context.push()
-        db.create_all()
-        self.client = self.app.test_client()
-        self.user = User(
-            name="testuser",
-            email="testemail@example.com"
-        )
+        """Extends setup with additional test-specific configurations."""
+        super().setUp()
         self.task = Task(
             title="Test task",
             description="Test task description",
@@ -30,12 +22,6 @@ class TestTaskClass(unittest.TestCase):
             category=Category.WORK,
             user_id=self.user.id
         )
-
-    def tearDown(self):
-        """Tears down the Flask app and database after the tests."""
-        db.session.remove()
-        db.drop_all()
-        self.app_context.pop()
 
     def test_id(self):
         """Tests that the task's id is correct."""
