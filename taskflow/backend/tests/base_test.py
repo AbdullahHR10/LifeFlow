@@ -18,6 +18,7 @@ class BaseTestCase(unittest.TestCase):
             name="testuser",
             email="testemail@example.com",
         )
+        self.user.password = "123456"
 
     def tearDown(self):
         """Tears down the Flask app and database after the tests."""

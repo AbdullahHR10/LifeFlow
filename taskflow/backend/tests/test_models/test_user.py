@@ -14,7 +14,6 @@ class TestUserClass(BaseTestCase):
     def setUp(self):
         """Extends setup with additional test-specific configurations."""
         super().setUp()
-        self.user.password = "123456"
         self._original_log_level = logger.level
         logger.setLevel(logging.CRITICAL)
 
