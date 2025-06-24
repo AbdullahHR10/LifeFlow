@@ -44,15 +44,13 @@ class TestNoteClass(BaseTestCase):
 
     def test_background_color(self):
         """Tests the note's category if it's correct."""
-        self.assertIsInstance(self.note.background_color, str)
-        self.assertEqual(self.note.background_color, "Blue")
-        self.assertEqual(self.note.background_color,
-                         BackgroundColor.BLUE.value)
+        self.assertIsInstance(self.note.background_color, BackgroundColor)
+        self.assertEqual(self.note.background_color.name, "BLUE")
+        self.assertEqual(self.note.background_color.value, "Blue")
 
     def test_save_method(self):
         """Tests that the save method adds and commits
         the note instance to the database."""
-        self.note.background_color = BackgroundColor.BLUE
         self.note.save()
         retrived = db.session.get(Note, self.note.id)
         self.assertIsNotNone(retrived)
@@ -63,7 +61,6 @@ class TestNoteClass(BaseTestCase):
     def test_delete_method(self):
         """Tests that the delete method removes
         the note instance from the database."""
-        self.note.background_color = BackgroundColor.BLUE
         self.note.save()
         self.note.delete()
         retrived = db.session.get(Note, self.note.id)
@@ -78,7 +75,7 @@ class TestNoteClass(BaseTestCase):
             "updated_at": self.note.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
             "title": "Test note",
             "content": "Test note content",
-            "background_color": BackgroundColor.BLUE.value,
+            "background_color": "BLUE",
             "user_id": self.user.id
         }
         self.assertEqual(self.note.to_dict(), expected_dict)
