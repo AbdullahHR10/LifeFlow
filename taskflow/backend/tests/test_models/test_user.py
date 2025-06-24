@@ -80,7 +80,6 @@ class TestUserClass(BaseTestCase):
         Verifies that cloning a user with a duplicate email
         raises an ValueError upon saving.
         """
-        self.user.save()
         clone = User(
             name="testuser",
             email="testemail@example.com",
@@ -150,7 +149,6 @@ class TestUserClass(BaseTestCase):
     def test_save_method(self):
         """Tests that the save method adds and commits
         the user instance to the database."""
-        self.user.save()
         retrived = db.session.get(User, self.user.id)
         self.assertIsNotNone(retrived)
         self.assertEqual(retrived.name, self.user.name)
@@ -160,7 +158,6 @@ class TestUserClass(BaseTestCase):
     def test_delete_method(self):
         """Tests that the delete method removes
         the user instance from the database."""
-        self.user.save()
         self.user.delete()
         retrived = db.session.get(User, self.user.id)
         self.assertIsNone(retrived)
@@ -181,9 +178,8 @@ class TestUserClass(BaseTestCase):
     def test_str_method(self):
         """Tests that the __str__ method returns a
         string representation of the object."""
-        dict_rep = self.user.to_dict()
-        expected_str = f"[User] ({self.user.id}) {dict_rep}"
-        self.assertEqual(self.user.__str__(), expected_str)
+        expected_str = f"[User] ({self.user.id}) {self.user.to_dict()}"
+        self.assertEqual(str(self.user), expected_str)
 
 
 if __name__ == "__main__":
