@@ -3,11 +3,12 @@
 import unittest
 from backend import create_app, db
 from backend.models.user import User
+from flask_login import login_user
 
 
 class BaseTestCase(unittest.TestCase):
     """Provides shared setup and teardown methods for all test cases."""
-    def setUp(self):
+    def setUp(self, login=False):
         """Sets up the flask app and database for all tests."""
         self.app = create_app("testing")
         self.app_context = self.app.app_context()
@@ -19,6 +20,11 @@ class BaseTestCase(unittest.TestCase):
             email="testemail@example.com",
         )
         self.user.password = "123456"
+        self.user.save()
+        if login:
+            with self.client:
+                with self.app.test_request_context():
+                    login_user(self.user)
 
     def tearDown(self):
         """Tears down the Flask app and database after the tests."""
