@@ -12,7 +12,7 @@ class TestTaskClass(BaseTestCase):
     """Unit tests for the Task model."""
     def setUp(self):
         """Extends setup with additional test-specific configurations."""
-        super().setUp()
+        super().setUp(user=True)
         self.task = Task(
             title="Test task",
             description="Test task description",

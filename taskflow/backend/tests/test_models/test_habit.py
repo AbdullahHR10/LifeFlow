@@ -12,7 +12,7 @@ class TestHabitClass(BaseTestCase):
     """Unit tests for the Habit model."""
     def setUp(self):
         """Extends setup with additional test-specific configurations."""
-        super().setUp()
+        super().setUp(user=True)
         self.habit = Habit(
             title="Test habit",
             description="Test habit description",

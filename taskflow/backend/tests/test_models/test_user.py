@@ -13,7 +13,7 @@ class TestUserClass(BaseTestCase):
     """Unit tests for the User model."""
     def setUp(self):
         """Extends setup with additional test-specific configurations."""
-        super().setUp()
+        super().setUp(user=True)
         self._original_log_level = logger.level
         logger.setLevel(logging.CRITICAL)
 

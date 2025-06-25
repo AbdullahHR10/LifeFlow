@@ -10,7 +10,7 @@ class TestNoteRoutes(BaseTestCase):
     """Unit tests for Note routes."""
     def setUp(self):
         """Extends setup with additional test-specific configurations."""
-        super().setUp(login=True)
+        super().setUp(login=True, user=True)
         self.note = Note(
             title="Test note",
             content="Test note content",

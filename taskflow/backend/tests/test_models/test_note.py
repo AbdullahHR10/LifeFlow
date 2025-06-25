@@ -12,7 +12,7 @@ class TestNoteClass(BaseTestCase):
     """Unit tests for the Note model."""
     def setUp(self):
         """Extends setup with additional test-specific configurations."""
-        super().setUp()
+        super().setUp(user=True)
         self.note = Note(
             title="Test note",
             content="Test note content",
