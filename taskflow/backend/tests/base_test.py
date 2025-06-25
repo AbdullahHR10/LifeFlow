@@ -23,12 +23,14 @@ class BaseTestCase(unittest.TestCase):
             self.user.password = "123456"
             self.user.save()
         if login:
-            with self.client:
-                with self.app.test_request_context():
-                    login_user(self.user)
+            self.request_context = self.app.test_request_context()
+            self.request_context.push()
+            login_user(self.user)
 
     def tearDown(self):
         """Tears down the Flask app and database after the tests."""
+        if hasattr(self, "request_context"):
+            self.request_context.pop()
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
