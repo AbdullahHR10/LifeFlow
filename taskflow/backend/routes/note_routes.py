@@ -1,3 +1,5 @@
+"""Module that contains Note routes."""
+
 from flask import Blueprint
 from flask_login import current_user, login_required
 from ..models.note import Note
