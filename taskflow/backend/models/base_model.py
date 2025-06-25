@@ -32,8 +32,6 @@ class BaseModel(Base, db.Model):
         if kwargs:
             for key, value in kwargs.items():
                 if key != "__class__":
-                    if isinstance(value, Enum):
-                        value = value.value
                     setattr(self, key, value)
 
     def save(self, refresh=False):
