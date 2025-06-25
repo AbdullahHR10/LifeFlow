@@ -2,8 +2,16 @@
 from .base_model import BaseModel
 from sqlalchemy import (Column, String, Integer, Date, Boolean,
                         ForeignKey, Enum as SqlEnum)
+from enum import Enum
 from sqlalchemy.orm import relationship
 from ..utils.enums import BackgroundColor, Priority, Category
+
+
+class Frequency(Enum):
+    """Priority enum."""
+    DAILY = "Daily"
+    WEEKLY = "Weekly"
+    Monthly = "Monthly"
 
 
 class Habit(BaseModel):
@@ -12,7 +20,8 @@ class Habit(BaseModel):
 
     title = Column(String(100), nullable=False)
     description = Column(String(255), nullable=True)
-    frequency = Column(String(50), nullable=False)
+    frequency = Column(SqlEnum(Frequency, name="frequency_enum"),
+                       nullable=False)
     target_count = Column(Integer, nullable=False)
     current_streak = Column(Integer, default=0)
     longest_streak = Column(Integer, default=0)
