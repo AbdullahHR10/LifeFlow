@@ -8,19 +8,20 @@ from flask_login import login_user
 
 class BaseTestCase(unittest.TestCase):
     """Provides shared setup and teardown methods for all test cases."""
-    def setUp(self, login=False):
+    def setUp(self, login=False, user=False):
         """Sets up the flask app and database for all tests."""
         self.app = create_app("testing")
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
         self.client = self.app.test_client()
-        self.user = User(
-            name="testuser",
-            email="testemail@example.com",
-        )
-        self.user.password = "123456"
-        self.user.save()
+        if user:
+            self.user = User(
+                name="testuser",
+                email="testemail@example.com",
+            )
+            self.user.password = "123456"
+            self.user.save()
         if login:
             with self.client:
                 with self.app.test_request_context():
