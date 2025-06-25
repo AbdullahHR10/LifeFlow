@@ -1,11 +1,10 @@
 """Module that contains the converters utils unittests."""
 
 import unittest
-from backend.tests.base_test import BaseTestCase
 from backend.utils.converters import str_to_bool
 
 
-class TestConvertersUtils(BaseTestCase):
+class TestConvertersUtils(unittest.TestCase):
     """Unit tests for the converters utils."""
 
     def test_str_to_bool(self):
