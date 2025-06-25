@@ -2,7 +2,7 @@
 
 from flask import abort, request
 from flask_login import current_user
-from .response import json_response
+from backend import db
 
 
 def get_object(model: type, obj_id: str) -> object:
@@ -16,7 +16,7 @@ def get_object(model: type, obj_id: str) -> object:
     Returns:
         object: The authorized object instance.
     """
-    obj = model.query.get(obj_id)
+    obj = db.session.get(model, obj_id)
 
     if not obj or obj.user_id != current_user.id:
         abort(404)
