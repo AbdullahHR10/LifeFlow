@@ -4,14 +4,7 @@ from sqlalchemy import (Column, String, Integer, Date, Boolean,
                         ForeignKey, Enum as SqlEnum)
 from enum import Enum
 from sqlalchemy.orm import relationship
-from ..utils.enums import BackgroundColor, Priority, Category
-
-
-class Frequency(Enum):
-    """Priority enum."""
-    DAILY = "Daily"
-    WEEKLY = "Weekly"
-    Monthly = "Monthly"
+from ..utils.enums import BackgroundColor, Priority, Category, Frequency
 
 
 class Habit(BaseModel):
