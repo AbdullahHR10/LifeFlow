@@ -34,4 +34,4 @@ class Frequency(Enum):
     """Frequency enum."""
     DAILY = "Daily"
     WEEKLY = "Weekly"
-    Monthly = "Monthly"
+    MONTHLY = "Monthly"
