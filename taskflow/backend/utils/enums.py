@@ -30,6 +30,7 @@ class Category(Enum):
     HOBBY = "Hobby"
     OTHER = "Other"
 
+
 class Frequency(Enum):
     """Frequency enum."""
     DAILY = "Daily"
