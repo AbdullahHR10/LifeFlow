@@ -1,4 +1,13 @@
-"""Module that contains Note routes."""
+"""Module that contains Note routes.
+
+This module defines API endpoints for:
+- Listing user notes
+- Creating new notes
+- Editing and deleting notes
+
+Includes CSRF protection, rate limiting, and Swagger documentation.
+"""
+
 
 from flask import Blueprint, request
 from flask_login import current_user, login_required
