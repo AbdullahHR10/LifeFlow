@@ -56,12 +56,12 @@ def get_tasks():
     ), 200
 
 
-@task_bp.route("/tasks/data", methods=["GET"])
+@task_bp.route("/analytics", methods=["GET"])
 @swag_from(doc_path("task/tasks_data.yml"))
 @limiter.limit("20 per minute")
 @login_required
-def tasks_data():
-    """Gets current user task summary data."""
+def tasks_analytics():
+    """Gets current user task analytics data."""
     tasks = Task.query.filter_by(user_id=current_user.id).all()
 
     num_tasks = len(tasks)
@@ -154,7 +154,7 @@ def delete_task(task):
     ), 200
 
 
-@task_bp.route("/tasks/completed", methods=["DELETE"])
+@task_bp.route("/completed", methods=["DELETE"])
 @swag_from(doc_path("task/delete_completed_tasks.yml"))
 @limiter.limit("20 per minute")
 @login_required
