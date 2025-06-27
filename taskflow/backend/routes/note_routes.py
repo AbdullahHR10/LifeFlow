@@ -32,7 +32,7 @@ note_schema = NoteSchema()
 @limiter.limit("20 per minute")
 @login_required
 def get_notes():
-    """Get paginated notes for the current user."""
+    """Gets paginated notes for the current user."""
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 12, type=int)
     pagination = Note.query.filter_by(user_id=current_user.id) \
