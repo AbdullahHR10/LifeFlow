@@ -1,34 +1,56 @@
 """Module that contains Note routes."""
 
-from flask import Blueprint
+from flask import Blueprint, request
 from flask_login import current_user, login_required
+from backend import limiter
 from ..models.note import Note
-from ..utils.db_helpers import get_object, build_object, edit_object
+from ..utils.db_helpers import build_object, edit_object
 from ..utils.response import json_response
+from ..utils.logger import logger
+from flasgger import swag_from
+from ..utils.doc_path import doc_path
+from ..schemas.note_schema import NoteSchema
+from ..decorators.ownership import ownership_required
+
 
 note_bp = Blueprint('note_bp', __name__)
 note_keys = ["title", "content", "background_color"]
+note_schema = NoteSchema()
 
 
-@note_bp.route("/notes")
+@note_bp.route("/", methods=["GET"])
+@swag_from(doc_path("note/get_notes.yml"))
+@limiter.limit("20 per minute")
 @login_required
-def notes():
-    """Returns current user notes (json)."""
-    notes = Note.query.filter_by(user_id=current_user.id).order_by(
-        Note.updated_at.desc()).all()
-    notes_list = [note.to_dict() for note in notes]
+def get_notes():
+    """Get paginated notes for the current user."""
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 12, type=int)
+    pagination = Note.query.filter_by(user_id=current_user.id) \
+        .order_by(Note.updated_at.desc()) \
+        .paginate(page=page, per_page=per_page, error_out=False)
+
     return json_response(
         status="success",
-        data=notes_list
+        data={
+            "notes": [note.to_dict() for note in pagination.items],
+            "total": pagination.total,
+            "pages": pagination.pages,
+            "current_page": pagination.page,
+            "per_page": pagination.per_page
+        }
     ), 200
 
 
-@note_bp.route("/notes", methods=["POST"])
+@note_bp.route("/", methods=["POST"])
+@swag_from(doc_path("note/create_note.yml"))
+@limiter.limit("10 per minute")
 @login_required
 def create_note():
     """Creates a new note."""
-    new_note = build_object(Note, note_keys)
+    new_note = build_object(Note, note_keys, schema=note_schema)
     new_note.save(refresh=True)
+    logger.info(f"User {current_user.id} created note {new_note.id}")
 
     return json_response(
         status="success",
@@ -37,13 +59,16 @@ def create_note():
     ), 201
 
 
-@note_bp.route("/notes/<string:note_id>", methods=["PATCH"])
+@note_bp.route("/<string:note_id>", methods=["PATCH"])
+@swag_from(doc_path("note/edit_note.yml"))
+@limiter.limit("10 per minute")
 @login_required
-def edit_note(note_id):
+@ownership_required(Note)
+def edit_note(note):
     """Edits a note."""
-    note = get_object(Note, note_id)
-    edit_object(note, note_keys)
+    edit_object(note, note_keys, schema=note_schema)
     note.save(refresh=True)
+    logger.info(f"User {current_user.id} edited note {note.id}")
 
     return json_response(
         status="success",
@@ -52,12 +77,15 @@ def edit_note(note_id):
     ), 200
 
 
-@note_bp.route("/notes/<string:note_id>", methods=["DELETE"])
+@note_bp.route("/<string:note_id>", methods=["DELETE"])
+@swag_from(doc_path("note/delete_note.yml"))
+@limiter.limit("5 per minute")
 @login_required
-def delete_note(note_id):
+@ownership_required(Note)
+def delete_note(note):
     """Deletes a note."""
-    note = get_object(Note, note_id)
     note.delete()
+    logger.info(f"User {current_user.id} deleted note {note.id}")
 
     return json_response(
         status="success",
