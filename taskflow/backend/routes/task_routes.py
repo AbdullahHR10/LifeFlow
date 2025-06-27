@@ -124,7 +124,10 @@ def complete_task(task_id):
 
 
 @task_bp.route("/<string:task_id>", methods=["PATCH"])
+@swag_from(doc_path("task/edit_task.yml"))
+@limiter.limit("20 per minute")
 @login_required
+@ownership_required
 def edit_task(task):
     """Edits a task's fields."""
     edit_object(task, task_keys)
