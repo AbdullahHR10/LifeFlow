@@ -27,9 +27,8 @@ from ..decorators.ownership import ownership_required
 
 
 task_bp = Blueprint('task_bp', __name__)
-task_keys = ["title", "description", "priority", "deadline", "category"]
 task_schema = TaskSchema()
-
+TASK_KEYS = ["title", "description", "priority", "deadline", "category"]
 
 @task_bp.route("/", methods=["GET"])
 @swag_from(doc_path("task/get_tasks.yml"))
@@ -95,7 +94,7 @@ def get_tasks_analytics():
 @login_required
 def create_task():
     """Creates a new task."""
-    new_task = build_object(Task, task_keys, schema=task_schema)
+    new_task = build_object(Task, TASK_KEYS, schema=task_schema)
     new_task.save(refresh=True)
     logger.info(f"User {current_user.id} created task {new_task.id}")
 
@@ -130,7 +129,7 @@ def complete_task(task_id):
 @ownership_required
 def edit_task(task):
     """Edits a task's fields."""
-    edit_object(task, task_keys)
+    edit_object(task, TASK_KEYS)
     task.save(refresh=True)
     logger.info(f"User {current_user.id} edited task {task.id}")
 
