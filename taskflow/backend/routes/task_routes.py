@@ -111,9 +111,8 @@ def create_task():
 @limiter.limit("20 per minute")
 @login_required
 @ownership_required(Task)
-def complete_task(task_id):
+def complete_task(task):
     """Marks task as completed."""
-    task = get_object(Task, task_id)
     task.mark_complete()
 
     return json_response(
