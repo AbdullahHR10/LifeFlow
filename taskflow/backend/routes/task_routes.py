@@ -60,7 +60,7 @@ def get_tasks():
 @swag_from(doc_path("task/tasks_data.yml"))
 @limiter.limit("20 per minute")
 @login_required
-def tasks_analytics():
+def get_tasks_analytics():
     """Gets current user task analytics data."""
     tasks = Task.query.filter_by(user_id=current_user.id).all()
 
@@ -110,7 +110,7 @@ def create_task():
 @swag_from(doc_path("task/complete_task.yml"))
 @limiter.limit("20 per minute")
 @login_required
-@ownership_required
+@ownership_required(Task)
 def complete_task(task_id):
     """Marks task as completed."""
     task = get_object(Task, task_id)
@@ -145,7 +145,7 @@ def edit_task(task):
 @swag_from(doc_path("task/delete_task.yml"))
 @limiter.limit("20 per minute")
 @login_required
-@ownership_required
+@ownership_required(Task)
 def delete_task(task):
     """Deletes a task from the database."""
     task.delete()
@@ -161,7 +161,7 @@ def delete_task(task):
 @swag_from(doc_path("task/delete_completed_tasks.yml"))
 @limiter.limit("20 per minute")
 @login_required
-@ownership_required
+@ownership_required(Task)
 def delete_completed_tasks():
     """Deletes all completed tasks for the current user."""
     completed_tasks = Task.query.filter_by(
