@@ -88,13 +88,13 @@ def login():
         return json_response(
             status="error",
             message="This email is not associated with an account"
-        ), 400
+        ), 401
 
     if not user.check_password(password):
         return json_response(
             status="error",
             message="Incorrect password"
-        ), 400
+        ), 401
 
     login_user(user, remember=remember)
     logger.info(f"User logged in: {email} IP: {request.remote_addr}")
