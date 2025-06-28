@@ -2,7 +2,6 @@
 from .base_model import BaseModel
 from sqlalchemy import (Column, String, Integer, Date, Boolean,
                         ForeignKey, Enum as SqlEnum)
-from enum import Enum
 from sqlalchemy.orm import relationship
 from ..utils.enums import BackgroundColor, Priority, Category, Frequency
 
