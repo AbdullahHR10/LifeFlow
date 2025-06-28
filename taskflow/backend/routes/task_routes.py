@@ -30,6 +30,7 @@ task_bp = Blueprint('task_bp', __name__)
 task_schema = TaskSchema()
 TASK_KEYS = ["title", "description", "priority", "deadline", "category"]
 
+
 @task_bp.route("/", methods=["GET"])
 @swag_from(doc_path("task/get_tasks.yml"))
 @limiter.limit("20 per minute")
