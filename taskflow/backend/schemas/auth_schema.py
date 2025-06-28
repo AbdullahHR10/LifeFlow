@@ -1,5 +1,5 @@
 """Module that contains the Auth schemas."""
-from marshmallow import Schema, fields, validate, ValidationError
+from marshmallow import Schema, fields, validate
 
 
 class SignupSchema(Schema):
@@ -29,4 +29,4 @@ class LoginSchema(Schema):
     """Class that defines the schema of Login."""
     email = fields.Email(required=True)
     password = fields.Str(required=True)
-    remember = fields.Boolean(missing=False)
+    remember = fields.Boolean(load_default=False)
