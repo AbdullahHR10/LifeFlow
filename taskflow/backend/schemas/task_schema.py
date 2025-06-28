@@ -11,7 +11,7 @@ class TaskSchema(Schema):
         validate=validate.OneOf([priority.name for priority in Priority])
     )
     deadline = fields.Date(required=True)
-    completed = fields.Bool(missing=False)
+    completed = fields.Bool(required=False)
     category = fields.Str(
         validate=validate.OneOf([category.name for category in Category])
     )
