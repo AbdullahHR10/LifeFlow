@@ -16,6 +16,8 @@ class User(BaseModel, UserMixin):
     tasks = relationship("Task", back_populates="user")
     habits = relationship("Habit", back_populates="user")
     notes = relationship("Note", back_populates="user")
+    budgets = relationship("Budget", back_populates="user")
+    transactions = relationship("Transaction", back_populates="user")
 
     @property
     def password(self):
