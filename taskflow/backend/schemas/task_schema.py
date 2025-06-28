@@ -8,7 +8,7 @@ class TaskSchema(Schema):
     title = fields.Str(required=True, validate=validate.Length(min=1))
     description = fields.Str(required=True, validate=validate.Length(min=1))
     priority = fields.Str(
-        validate=validate.OneOf([prio.name for prio in Priority])
+        validate=validate.OneOf([priority.name for priority in Priority])
     )
     deadline = fields.Date(required=True)
     completed = fields.Bool(missing=False)
