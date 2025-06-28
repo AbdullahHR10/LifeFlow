@@ -23,8 +23,8 @@ from ..decorators.ownership import ownership_required
 
 
 note_bp = Blueprint('note_bp', __name__)
-note_keys = ["title", "content", "background_color"]
 note_schema = NoteSchema()
+NOTE_KEYS = ["title", "content", "background_color"]
 
 
 @note_bp.route("/", methods=["GET"])
@@ -57,7 +57,7 @@ def get_notes():
 @login_required
 def create_note():
     """Creates a new note."""
-    new_note = build_object(Note, note_keys, schema=note_schema)
+    new_note = build_object(Note, NOTE_KEYS, schema=note_schema)
     new_note.save(refresh=True)
     logger.info(f"User {current_user.id} created note {new_note.id}")
 
@@ -75,7 +75,7 @@ def create_note():
 @ownership_required(Note)
 def edit_note(note):
     """Edits a note."""
-    edit_object(note, note_keys, schema=note_schema)
+    edit_object(note, NOTE_KEYS, schema=note_schema)
     note.save(refresh=True)
     logger.info(f"User {current_user.id} edited note {note.id}")
 
