@@ -6,12 +6,12 @@ from ..utils.enums import Priority, Category
 class TaskSchema(Schema):
     """Class that defines the schema of Task."""
     title = fields.Str(required=True, validate=validate.Length(min=1))
-    description = fields.Str(required=True)
+    description = fields.Str(required=True, validate=validate.Length(min=1))
     priority = fields.Str(
         validate=validate.OneOf([prio.name for prio in Priority])
     )
-    deadline = fields.DateTime(required=True)
-    completed = fields.Bool(required=False)
+    deadline = fields.Date(required=True)
+    completed = fields.Bool(missing=False)
     category = fields.Str(
         validate=validate.OneOf([category.name for category in Category])
     )
