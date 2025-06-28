@@ -2,6 +2,7 @@
 
 from werkzeug.exceptions import HTTPException
 from flask_limiter.errors import RateLimitExceeded
+from marshmallow import ValidationError
 from flask import request
 from flask_login import current_user
 from .response import json_response
@@ -17,6 +18,15 @@ def register_error_handlers(app):
             status="error",
             message=e.description
         ), e.code
+
+    @app.errorhandler(ValidationError)
+    def handle_validation_error(e):
+        """Handles Marshmallow validation errors."""
+        return json_response(
+            status="error",
+            message="Validation error",
+            data=e.messages
+        ), 400
 
     @app.errorhandler(Exception)
     def handle_general_exception(e):
