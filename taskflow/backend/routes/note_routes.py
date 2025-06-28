@@ -5,7 +5,7 @@ This module defines API endpoints for:
 - Creating new notes
 - Editing and deleting notes
 
-Includes CSRF protection, rate limiting, and Swagger documentation.
+All routes require authentication, and most require ownership validation.
 """
 
 
