@@ -14,7 +14,7 @@ from flask import Blueprint, request
 from flask_login import current_user, login_required
 from backend import limiter
 from ..models.habit import Habit
-from ..utils.db_helpers import get_object, build_object, edit_object
+from ..utils.db_helpers import build_object, edit_object
 from ..utils.response import json_response
 from ..utils.logger import logger
 from flasgger import swag_from
