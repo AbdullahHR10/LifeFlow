@@ -126,7 +126,7 @@ def complete_task(task):
 @swag_from(doc_path("task/edit_task.yml"))
 @limiter.limit("20 per minute")
 @login_required
-@ownership_required
+@ownership_required(Task)
 def edit_task(task):
     """Edits a task's fields."""
     edit_object(task, TASK_KEYS)
