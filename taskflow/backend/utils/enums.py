@@ -31,6 +31,33 @@ class Category(Enum):
     OTHER = "Other"
 
 
+class BudgetCategory(Enum):
+    """Budget category enum."""
+    SALARY = "Salary"
+    FREELANCE = "Freelance"
+    INVESTMENTS = "Investments"
+    OTHER_INCOME = "Other Income"
+    FOOD = "Food"
+    TRANSPORT = "Transport"
+    ENTERTAINMENT = "Entertainment"
+    UTILITIES = "Utilities"
+    SHOPPING = "Shopping"
+    HEALTH = "Health"
+    OTHER = "Other"
+
+
+class BudgetPeriod(Enum):
+    """Budget period enum."""
+    MONTHLY = "Monthly"
+    WEEKLY = "Weekly"
+
+
+class TransactionType(Enum):
+    """Transaction type enum."""
+    INCOME = "Income"
+    EXPENSE = "Expense"
+
+
 class Frequency(Enum):
     """Frequency enum."""
     DAILY = "Daily"

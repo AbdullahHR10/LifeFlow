@@ -21,7 +21,7 @@ class TestNoteRoutes(BaseTestCase):
 
     def test_get_notes(self):
         """Tests GET /notes route."""
-        response = self.client.get("/api/note/notes")
+        response = self.client.get("/api/notes")
         response_data = response.get_json()
         expected_data = [self.note.to_dict()]
 
@@ -35,7 +35,7 @@ class TestNoteRoutes(BaseTestCase):
             "content": "This is a test note.",
             "background_color": "BLUE"
         }
-        response = self.client.post("/api/note/notes", json=note_data)
+        response = self.client.post("/api/notes", json=note_data)
         response_data = response.get_json()
 
         self.assertEqual(response.status_code, 201)
@@ -57,7 +57,7 @@ class TestNoteRoutes(BaseTestCase):
             "background_color": "RED"
         }
         response = self.client.patch(
-            f"/api/note/notes/{self.note.id}",
+            f"/api/notes/{self.note.id}",
             json=updated_data
         )
         response_data = response.get_json()
@@ -78,10 +78,10 @@ class TestNoteRoutes(BaseTestCase):
 
     def test_delete_notes(self):
         """Tests DELETE /notes/<note_id> route."""
-        response = self.client.delete(f"/api/note/notes/{self.note.id}")
+        response = self.client.delete(f"/api/notes/{self.note.id}")
         self.assertEqual(response.status_code, 200)
 
-        follow_up = self.client.get("/api/note/notes")
+        follow_up = self.client.get("/api/notes")
         notes = follow_up.get_json()["data"]
         self.assertNotIn(self.note.to_dict(), notes)
 
@@ -90,7 +90,7 @@ class TestNoteRoutesUnauth(BaseTestCase):
     """Tests that unauthenticated users cannot access note routes."""
     def test_get_notes_unauth(self):
         """Tests that GET /notes returns 401 if unauthed."""
-        response = self.client.get("/api/note/notes")
+        response = self.client.get("/api/notes")
         self.assertEqual(response.status_code, 401)
 
     def test_post_notes_unauth(self):
@@ -100,7 +100,7 @@ class TestNoteRoutesUnauth(BaseTestCase):
             "content": "unauth access",
             "background_color": "RED"
         }
-        response = self.client.post("/api/note/notes", json=note_data)
+        response = self.client.post("/api/notes", json=note_data)
         self.assertEqual(response.status_code, 401)
 
     def test_patch_notes_unauthed(self):
@@ -112,7 +112,7 @@ class TestNoteRoutesUnauth(BaseTestCase):
         }
         fake_note_id = "123"
         response = self.client.patch(
-            f"/api/note/notes/{fake_note_id}",
+            f"/api/notes/{fake_note_id}",
             json=updated_data
         )
         self.assertEqual(response.status_code, 401)
@@ -120,7 +120,7 @@ class TestNoteRoutesUnauth(BaseTestCase):
     def test_delete_notes_unauthed(self):
         """Tests that DELETE /notes/<note_id> returns 401 if unauthed."""
         fake_note_id = "123"
-        response = self.client.delete(f"/api/note/notes/{fake_note_id}")
+        response = self.client.delete(f"/api/notes/{fake_note_id}")
         self.assertEqual(response.status_code, 401)
 
 
