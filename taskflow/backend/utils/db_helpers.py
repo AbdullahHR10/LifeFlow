@@ -2,6 +2,10 @@
 
 from flask import abort, request
 from flask_login import current_user
+from ..models.budget import Budget
+from ..models.transaction import Transaction
+from .enums import BudgetCategory, TransactionType
+from datetime import date
 from backend import db
 import bleach
 
@@ -105,3 +109,30 @@ def edit_object(obj: object, keys: list[str], schema=None) -> object:
         if key in data:
             setattr(obj, key, data[key])
     return obj
+
+
+def recalculate_budget(
+    user_id: str,
+    category: BudgetCategory,
+    start_date: date,
+    end_date: date
+) -> None:
+    """Recalculates and updates the spent amount for the user's budget."""
+    expenses = Transaction.query.filter_by(
+        user_id=user_id,
+        category=category,
+        type=TransactionType.EXPENSE
+    ).filter(
+        Transaction.date >= start_date,
+        Transaction.date <= end_date
+    ).all()
+
+    total_spent: float = sum(expense.amount for expense in expenses)
+    budget = Budget.query.filter_by(
+        user_id=user_id,
+        category=category
+    ).first()
+
+    if budget:
+        budget.spent = total_spent
+        budget.save()
