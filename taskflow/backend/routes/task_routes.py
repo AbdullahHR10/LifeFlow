@@ -57,7 +57,7 @@ def get_tasks():
 
 
 @task_bp.route("/analytics", methods=["GET"])
-@swag_from(doc_path("task/tasks_data.yml"))
+@swag_from(doc_path("task/tasks_analytics.yml"))
 @limiter.limit("20 per minute")
 @login_required
 def get_tasks_analytics():
