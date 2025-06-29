@@ -87,13 +87,13 @@ def login():
     if not user:
         return json_response(
             status="error",
-            message="This email is not associated with an account"
+            message="Invalid credentials"
         ), 401
 
     if not user.check_password(password):
         return json_response(
             status="error",
-            message="Incorrect password"
+            message="Invalid credentials"
         ), 401
 
     login_user(user, remember=remember)
