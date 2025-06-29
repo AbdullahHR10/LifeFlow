@@ -1,0 +1,100 @@
+tags:
+  - Budgets
+summary: Create new budget
+description: Creates a new budget for the authenticated user
+parameters:
+  - in: body
+    name: budget_data
+    description: Budget information
+    required: true
+    schema:
+      type: object
+      required:
+        - category
+        - amount
+        - period
+        - start_date
+        - end_date
+      properties:
+        category:
+          type: string
+          description: Budget category
+          example: "FOOD"
+        amount:
+          type: number
+          format: float
+          description: Budget amount
+          example: 500.00
+        period:
+          type: string
+          enum: [WEEKLY, MONTHLY, YEARLY]
+          description: Budget period
+          example: "MONTHLY"
+        start_date:
+          type: string
+          format: date
+          description: Budget start date
+          example: "2024-01-01"
+        end_date:
+          type: string
+          format: date
+          description: Budget end date
+          example: "2024-01-31"
+responses:
+  201:
+    description: Budget successfully created
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Budget created successfully"
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "budget_123"
+            category:
+              type: string
+              example: "FOOD"
+            amount:
+              type: number
+              format: float
+              example: 500.00
+            period:
+              type: string
+              example: "MONTHLY"
+            start_date:
+              type: string
+              format: date
+              example: "2024-01-01"
+            end_date:
+              type: string
+              format: date
+              example: "2024-01-31"
+            spent_amount:
+              type: number
+              format: float
+              example: 0.00
+            remaining_amount:
+              type: number
+              format: float
+              example: 500.00
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+  400:
+    description: Validation error
+  401:
+    description: User not authenticated
+  429:
+    description: Rate limit exceeded (10 requests per minute)
+security:
+  - session_auth: []
