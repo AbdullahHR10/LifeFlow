@@ -1,6 +1,6 @@
 """Module that contains the Habit class."""
 from .base_model import BaseModel
-from sqlalchemy import (Column, String, Integer, Date, Boolean,
+from sqlalchemy import (Column, String, Integer, Date, Boolean, Text,
                         ForeignKey, Enum as SqlEnum)
 from sqlalchemy.orm import relationship
 from ..utils.enums import BackgroundColor, Priority, Category, Frequency
@@ -10,8 +10,8 @@ class Habit(BaseModel):
     """Represents a habit in the application."""
     __tablename__ = "habits"
 
-    title = Column(String(100), nullable=False)
-    description = Column(String(255), nullable=True)
+    title = Column(String(30), nullable=False)
+    description = Column(Text, nullable=True)
     frequency = Column(SqlEnum(Frequency, name="frequency_enum"),
                        nullable=False)
     target_count = Column(Integer, nullable=False)
