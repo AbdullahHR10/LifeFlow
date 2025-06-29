@@ -1,0 +1,55 @@
+tags:
+  - Habits
+summary: Mark habit as complete
+description: Marks a habit as completed for today and updates streak information
+parameters:
+  - in: path
+    name: habit_id
+    type: string
+    required: true
+    description: Unique identifier of the habit
+    example: "habit_123"
+responses:
+  200:
+    description: Habit successfully marked as completed
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Habit marked as completed"
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "habit_123"
+            title:
+              type: string
+              example: "Daily Exercise"
+            current_streak:
+              type: integer
+              example: 6
+            longest_streak:
+              type: integer
+              example: 15
+            last_completed:
+              type: string
+              format: date
+              example: "2024-01-02"
+            updated_at:
+              type: string
+              format: date-time
+  401:
+    description: User not authenticated
+  403:
+    description: User doesn't own this habit
+  404:
+    description: Habit not found
+  429:
+    description: Rate limit exceeded (20 requests per minute)
+security:
+  - session_auth: []

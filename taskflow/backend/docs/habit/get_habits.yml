@@ -1,0 +1,93 @@
+tags:
+  - Habits
+summary: Get user habits
+description: Retrieves paginated list of habits for the authenticated user, ordered by most recently updated
+parameters:
+  - in: query
+    name: page
+    type: integer
+    description: Page number for pagination
+    default: 1
+    example: 1
+  - in: query
+    name: per_page
+    type: integer
+    description: Number of habits per page
+    default: 8
+    example: 8
+responses:
+  200:
+    description: Habits successfully retrieved
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            habits:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "habit_123"
+                  title:
+                    type: string
+                    example: "Daily Exercise"
+                  description:
+                    type: string
+                    example: "30 minutes of cardio exercise"
+                  frequency:
+                    type: string
+                    example: "DAILY"
+                  target_count:
+                    type: integer
+                    example: 1
+                  priority:
+                    type: string
+                    enum: [LOW, MEDIUM, HIGH, URGENT]
+                    example: "HIGH"
+                  category:
+                    type: string
+                    example: "HEALTH"
+                  background_color:
+                    type: string
+                    example: "#98FB98"
+                  current_streak:
+                    type: integer
+                    example: 5
+                  longest_streak:
+                    type: integer
+                    example: 15
+                  last_completed:
+                    type: string
+                    format: date
+                    example: "2024-01-01"
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+            total:
+              type: integer
+              example: 12
+            pages:
+              type: integer
+              example: 2
+            current_page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 8
+  401:
+    description: User not authenticated
+  429:
+    description: Rate limit exceeded (20 requests per minute)
+security:
+  - session_auth: []

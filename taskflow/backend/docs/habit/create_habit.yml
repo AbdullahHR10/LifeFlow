@@ -1,0 +1,103 @@
+tags:
+  - Habits
+summary: Create new habit
+description: Creates a new habit for the authenticated user
+parameters:
+  - in: body
+    name: habit_data
+    description: Habit information
+    required: true
+    schema:
+      type: object
+      required:
+        - title
+        - frequency
+      properties:
+        title:
+          type: string
+          description: Habit title
+          example: "Daily Exercise"
+        description:
+          type: string
+          description: Habit description
+          example: "30 minutes of cardio exercise"
+        frequency:
+          type: string
+          description: How often the habit should be performed
+          example: "DAILY"
+        target_count:
+          type: integer
+          description: Target number of times to perform the habit
+          example: 1
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+          description: Habit priority level
+          example: "HIGH"
+        category:
+          type: string
+          description: Habit category
+          example: "HEALTH"
+        background_color:
+          type: string
+          description: Background color for the habit (hex code)
+          example: "#98FB98"
+responses:
+  201:
+    description: Habit successfully created
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Habit created successfully"
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "habit_123"
+            title:
+              type: string
+              example: "Daily Exercise"
+            description:
+              type: string
+              example: "30 minutes of cardio exercise"
+            frequency:
+              type: string
+              example: "DAILY"
+            target_count:
+              type: integer
+              example: 1
+            priority:
+              type: string
+              example: "HIGH"
+            category:
+              type: string
+              example: "HEALTH"
+            background_color:
+              type: string
+              example: "#98FB98"
+            current_streak:
+              type: integer
+              example: 0
+            longest_streak:
+              type: integer
+              example: 0
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+  400:
+    description: Validation error
+  401:
+    description: User not authenticated
+  429:
+    description: Rate limit exceeded (10 requests per minute)
+security:
+  - session_auth: []
