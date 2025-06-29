@@ -1,0 +1,72 @@
+tags:
+  - Notes
+summary: Get user notes
+description: Retrieves paginated list of notes for the authenticated user, ordered by most recently updated
+parameters:
+  - in: query
+    name: page
+    type: integer
+    description: Page number for pagination
+    default: 1
+    example: 1
+  - in: query
+    name: per_page
+    type: integer
+    description: Number of notes per page
+    default: 12
+    example: 12
+responses:
+  200:
+    description: Notes successfully retrieved
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            notes:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "note_123"
+                  title:
+                    type: string
+                    example: "Meeting Notes"
+                  content:
+                    type: string
+                    example: "Important points discussed in today's meeting..."
+                  background_color:
+                    type: string
+                    example: "#FFE4B5"
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-01-01T10:00:00Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-01-01T10:00:00Z"
+            total:
+              type: integer
+              example: 25
+            pages:
+              type: integer
+              example: 3
+            current_page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 12
+  401:
+    description: User not authenticated
+  429:
+    description: Rate limit exceeded (20 requests per minute)
+security:
+  - session_auth: []

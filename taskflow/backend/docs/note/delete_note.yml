@@ -1,0 +1,33 @@
+tags:
+  - Notes
+summary: Delete note
+description: Permanently deletes a specific note
+parameters:
+  - in: path
+    name: note_id
+    type: string
+    required: true
+    description: Unique identifier of the note
+    example: "note_123"
+responses:
+  200:
+    description: Note successfully deleted
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Note deleted successfully"
+  401:
+    description: User not authenticated
+  403:
+    description: User doesn't own this note
+  404:
+    description: Note not found
+  429:
+    description: Rate limit exceeded (5 requests per minute)
+security:
+  - session_auth: []

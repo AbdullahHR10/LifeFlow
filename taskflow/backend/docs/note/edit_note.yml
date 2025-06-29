@@ -1,0 +1,72 @@
+tags:
+  - Notes
+summary: Edit note
+description: Updates an existing note's information
+parameters:
+  - in: path
+    name: note_id
+    type: string
+    required: true
+    description: Unique identifier of the note
+    example: "note_123"
+  - in: body
+    name: note_data
+    description: Updated note information
+    required: true
+    schema:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Note title
+          example: "Updated Meeting Notes"
+        content:
+          type: string
+          description: Note content
+          example: "Updated content with additional information..."
+        background_color:
+          type: string
+          description: Background color for the note (hex code)
+          example: "#E6E6FA"
+responses:
+  200:
+    description: Note successfully updated
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Note updated successfully"
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "note_123"
+            title:
+              type: string
+              example: "Updated Meeting Notes"
+            content:
+              type: string
+              example: "Updated content with additional information..."
+            background_color:
+              type: string
+              example: "#E6E6FA"
+            updated_at:
+              type: string
+              format: date-time
+  400:
+    description: Validation error
+  401:
+    description: User not authenticated
+  403:
+    description: User doesn't own this note
+  404:
+    description: Note not found
+  429:
+    description: Rate limit exceeded (10 requests per minute)
+security:
+  - session_auth: []

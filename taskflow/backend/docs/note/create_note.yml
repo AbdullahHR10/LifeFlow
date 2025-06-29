@@ -1,0 +1,68 @@
+tags:
+  - Notes
+summary: Create new note
+description: Creates a new note for the authenticated user
+parameters:
+  - in: body
+    name: note_data
+    description: Note information
+    required: true
+    schema:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+          description: Note title
+          example: "Meeting Notes"
+        content:
+          type: string
+          description: Note content
+          example: "Important points discussed in today's meeting..."
+        background_color:
+          type: string
+          description: Background color for the note (hex code)
+          example: "#FFE4B5"
+responses:
+  201:
+    description: Note successfully created
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Note created successfully"
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "note_123"
+            title:
+              type: string
+              example: "Meeting Notes"
+            content:
+              type: string
+              example: "Important points discussed in today's meeting..."
+            background_color:
+              type: string
+              example: "#FFE4B5"
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+  400:
+    description: Validation error
+  401:
+    description: User not authenticated
+  429:
+    description: Rate limit exceeded (10 requests per minute)
+security:
+  - session_auth: []
