@@ -1,0 +1,82 @@
+tags:
+  - Transactions
+summary: Get user transactions
+description: Retrieves paginated list of transactions for the authenticated user, ordered by most recent date
+parameters:
+  - in: query
+    name: page
+    type: integer
+    description: Page number for pagination
+    default: 1
+    example: 1
+  - in: query
+    name: per_page
+    type: integer
+    description: Number of transactions per page
+    default: 12
+    example: 12
+responses:
+  200:
+    description: Transactions successfully retrieved
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            transactions:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "transaction_123"
+                  title:
+                    type: string
+                    example: "Grocery Shopping"
+                  description:
+                    type: string
+                    example: "Weekly grocery shopping at supermarket"
+                  amount:
+                    type: number
+                    format: float
+                    example: 85.50
+                  type:
+                    type: string
+                    enum: [INCOME, EXPENSE]
+                    example: "EXPENSE"
+                  date:
+                    type: string
+                    format: date
+                    example: "2024-01-01"
+                  category:
+                    type: string
+                    example: "FOOD"
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+            total:
+              type: integer
+              example: 45
+            pages:
+              type: integer
+              example: 4
+            current_page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 12
+  401:
+    description: User not authenticated
+  429:
+    description: Rate limit exceeded (20 requests per minute)
+security:
+  - session_auth: []

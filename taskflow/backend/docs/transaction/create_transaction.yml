@@ -1,0 +1,97 @@
+tags:
+  - Transactions
+summary: Create new transaction
+description: Creates a new transaction for the authenticated user and recalculates related budgets
+parameters:
+  - in: body
+    name: transaction_data
+    description: Transaction information
+    required: true
+    schema:
+      type: object
+      required:
+        - title
+        - amount
+        - type
+        - date
+        - category
+      properties:
+        title:
+          type: string
+          description: Transaction title
+          example: "Grocery Shopping"
+        description:
+          type: string
+          description: Transaction description
+          example: "Weekly grocery shopping at supermarket"
+        amount:
+          type: number
+          format: float
+          description: Transaction amount
+          example: 85.50
+        type:
+          type: string
+          enum: [INCOME, EXPENSE]
+          description: Transaction type
+          example: "EXPENSE"
+        date:
+          type: string
+          format: date
+          description: Transaction date
+          example: "2024-01-01"
+        category:
+          type: string
+          description: Transaction category
+          example: "FOOD"
+responses:
+  201:
+    description: Transaction successfully created
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Transaction created successfully"
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "transaction_123"
+            title:
+              type: string
+              example: "Grocery Shopping"
+            description:
+              type: string
+              example: "Weekly grocery shopping at supermarket"
+            amount:
+              type: number
+              format: float
+              example: 85.50
+            type:
+              type: string
+              example: "EXPENSE"
+            date:
+              type: string
+              format: date
+              example: "2024-01-01"
+            category:
+              type: string
+              example: "FOOD"
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+  400:
+    description: Validation error
+  401:
+    description: User not authenticated
+  429:
+    description: Rate limit exceeded (10 requests per minute)
+security:
+  - session_auth: []
