@@ -14,7 +14,7 @@ class BudgetSchema(Schema):
         validate=validate.Range(min=0)
     )
     spent = fields.Float(
-        missing=0.0,
+        load_default=0.0,
         validate=validate.Range(min=0)
     )
     period = fields.Str(
