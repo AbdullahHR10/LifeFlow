@@ -1,0 +1,103 @@
+swagger: "2.0"
+info:
+  title: TaskFlow API
+  description: A comprehensive API for managing tasks, notes, habits, transactions, and budgets
+  version: "1.0.0"
+  contact:
+    name: API Support
+    email: support@taskflow.com
+host: localhost:5000
+basePath: /api/v1
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+
+securityDefinitions:
+  session_auth:
+    type: apiKey
+    in: cookie
+    name: session
+    description: Session-based authentication using Flask-Login
+
+tags:
+  - name: Authentication
+    description: User authentication and session management
+  - name: Tasks
+    description: Task management operations
+  - name: Notes
+    description: Note management operations
+  - name: Habits
+    description: Habit tracking operations
+  - name: Transactions
+    description: Financial transaction management
+  - name: Budgets
+    description: Budget management operations
+
+definitions:
+  Error:
+    type: object
+    properties:
+      status:
+        type: string
+        example: "error"
+      message:
+        type: string
+        example: "An error occurred"
+  
+  Success:
+    type: object
+    properties:
+      status:
+        type: string
+        example: "success"
+      message:
+        type: string
+        example: "Operation completed successfully"
+
+  PaginationInfo:
+    type: object
+    properties:
+      total:
+        type: integer
+        description: Total number of items
+      pages:
+        type: integer
+        description: Total number of pages
+      current_page:
+        type: integer
+        description: Current page number
+      per_page:
+        type: integer
+        description: Items per page
+
+responses:
+  UnauthorizedError:
+    description: Authentication required
+    schema:
+      $ref: '#/definitions/Error'
+  
+  ForbiddenError:
+    description: Access denied - user doesn't own this resource
+    schema:
+      $ref: '#/definitions/Error'
+  
+  NotFoundError:
+    description: Resource not found
+    schema:
+      $ref: '#/definitions/Error'
+  
+  ValidationError:
+    description: Input validation failed
+    schema:
+      $ref: '#/definitions/Error'
+  
+  RateLimitError:
+    description: Rate limit exceeded
+    schema:
+      $ref: '#/definitions/Error'
+
+paths: {}
