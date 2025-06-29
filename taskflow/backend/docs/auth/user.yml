@@ -1,0 +1,53 @@
+tags:
+  - Authentication
+summary: Get current user
+description: Retrieves the current authenticated user's profile information
+responses:
+  200:
+    description: Current user data successfully retrieved
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: User's unique identifier
+              example: "user_123"
+            name:
+              type: string
+              description: User's full name
+              example: "John Doe"
+            email:
+              type: string
+              format: email
+              description: User's email address
+              example: "john@example.com"
+  401:
+    description: User not authenticated
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "Authentication required"
+  429:
+    description: Rate limit exceeded (30 requests per minute)
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "Rate limit exceeded"
+security:
+  - session_auth: []
