@@ -1,0 +1,33 @@
+tags:
+  - Tasks
+summary: Delete all completed tasks
+description: Permanently deletes all completed tasks for the authenticated user
+responses:
+  200:
+    description: All completed tasks successfully deleted
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "All completed tasks deleted successfully"
+  404:
+    description: No completed tasks found
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "No completed tasks found"
+  401:
+    description: User not authenticated
+  429:
+    description: Rate limit exceeded (20 requests per minute)
+security:
+  - session_auth: []

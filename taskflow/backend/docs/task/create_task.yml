@@ -1,0 +1,87 @@
+tags:
+  - Tasks
+summary: Create new task
+description: Creates a new task for the authenticated user
+parameters:
+  - in: body
+    name: task_data
+    description: Task information
+    required: true
+    schema:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          description: Task title
+          example: "Complete project documentation"
+        description:
+          type: string
+          description: Task description
+          example: "Write comprehensive API documentation for the project"
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+          description: Task priority level
+          example: "HIGH"
+        deadline:
+          type: string
+          format: date
+          description: Task deadline
+          example: "2024-01-15"
+        category:
+          type: string
+          description: Task category
+          example: "WORK"
+responses:
+  201:
+    description: Task successfully created
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Task created successfully"
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "task_123"
+            title:
+              type: string
+              example: "Complete project documentation"
+            description:
+              type: string
+              example: "Write comprehensive API documentation"
+            priority:
+              type: string
+              example: "HIGH"
+            deadline:
+              type: string
+              format: date
+              example: "2024-01-15"
+            category:
+              type: string
+              example: "WORK"
+            completed:
+              type: boolean
+              example: false
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+  400:
+    description: Validation error
+  401:
+    description: User not authenticated
+  429:
+    description: Rate limit exceeded (10 requests per minute)
+security:
+  - session_auth: []

@@ -1,0 +1,66 @@
+tags:
+  - Tasks
+summary: Get task analytics
+description: Retrieves analytics data for user's tasks including counts by priority, category, and completion status
+responses:
+  200:
+    description: Task analytics successfully retrieved
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              description: Total number of tasks
+              example: 25
+            completed:
+              type: integer
+              description: Number of completed tasks
+              example: 15
+            unfinished:
+              type: integer
+              description: Number of unfinished tasks
+              example: 10
+            priorities:
+              type: object
+              description: Task count by priority level
+              properties:
+                LOW:
+                  type: integer
+                  example: 5
+                MEDIUM:
+                  type: integer
+                  example: 10
+                HIGH:
+                  type: integer
+                  example: 8
+                URGENT:
+                  type: integer
+                  example: 2
+            categories:
+              type: object
+              description: Task count by category
+              properties:
+                WORK:
+                  type: integer
+                  example: 12
+                PERSONAL:
+                  type: integer
+                  example: 8
+                HEALTH:
+                  type: integer
+                  example: 3
+                EDUCATION:
+                  type: integer
+                  example: 2
+  401:
+    description: User not authenticated
+  429:
+    description: Rate limit exceeded (20 requests per minute)
+security:
+  - session_auth: []

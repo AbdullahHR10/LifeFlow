@@ -1,0 +1,89 @@
+tags:
+  - Tasks
+summary: Edit task
+description: Updates an existing task's information
+parameters:
+  - in: path
+    name: task_id
+    type: string
+    required: true
+    description: Unique identifier of the task
+    example: "task_123"
+  - in: body
+    name: task_data
+    description: Updated task information
+    required: true
+    schema:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Task title
+          example: "Updated task title"
+        description:
+          type: string
+          description: Task description
+          example: "Updated task description"
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+          description: Task priority level
+          example: "MEDIUM"
+        deadline:
+          type: string
+          format: date
+          description: Task deadline
+          example: "2024-01-20"
+        category:
+          type: string
+          description: Task category
+          example: "PERSONAL"
+responses:
+  200:
+    description: Task successfully updated
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Task updated successfully"
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "task_123"
+            title:
+              type: string
+              example: "Updated task title"
+            description:
+              type: string
+              example: "Updated task description"
+            priority:
+              type: string
+              example: "MEDIUM"
+            deadline:
+              type: string
+              format: date
+              example: "2024-01-20"
+            category:
+              type: string
+              example: "PERSONAL"
+            updated_at:
+              type: string
+              format: date-time
+  400:
+    description: Validation error
+  401:
+    description: User not authenticated
+  403:
+    description: User doesn't own this task
+  404:
+    description: Task not found
+  429:
+    description: Rate limit exceeded (20 requests per minute)
+security:
+  - session_auth: []
