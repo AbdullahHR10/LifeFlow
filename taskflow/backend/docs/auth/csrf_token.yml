@@ -1,0 +1,20 @@
+tags:
+  - Authentication
+summary: Get CSRF token
+description: Retrieves a CSRF token for form submissions
+responses:
+  200:
+    description: CSRF token successfully generated
+    schema:
+      type: object
+      properties:
+        csrf_token:
+          type: string
+          description: CSRF token for form protection
+          example: "IjY4MzQ2ZDFkNzJkNzM4ZGY4ZjA5YzQyMWY3YzQwNzI4YjI4ZjY4YzQi.ZrKj8g.8vQj9wX2kL5mN3pR7sT1uV4yZ6"
+    headers:
+      Set-Cookie:
+        type: string
+        description: CSRF token set as secure cookie
+        example: "csrf_token=token_value; Path=/; Secure; SameSite=Strict"
+security: []

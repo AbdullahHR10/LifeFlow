@@ -1,0 +1,40 @@
+tags:
+  - Authentication
+summary: Logout user
+description: Logs out the currently authenticated user
+responses:
+  200:
+    description: User successfully logged out
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "User logged out successfully."
+  401:
+    description: User not authenticated
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "Authentication required"
+  429:
+    description: Rate limit exceeded (20 requests per minute)
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "Rate limit exceeded"
+security:
+  - session_auth: []

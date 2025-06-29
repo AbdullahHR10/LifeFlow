@@ -1,0 +1,65 @@
+tags:
+  - Authentication
+summary: Register a new user
+description: Creates a new user account with email, name, and password. Automatically logs in the user after successful registration.
+parameters:
+  - in: body
+    name: user_data
+    description: User registration information
+    required: true
+    schema:
+      type: object
+      required:
+        - email
+        - name
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address (must be unique)
+          example: "user@example.com"
+        name:
+          type: string
+          description: User's full name
+          example: "John Doe"
+        password:
+          type: string
+          format: password
+          description: User's password
+          example: "securePassword123"
+responses:
+  201:
+    description: User successfully registered and logged in
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "User signed up successfully!"
+  400:
+    description: Email already exists or validation error
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "This email is associated with another account"
+  429:
+    description: Rate limit exceeded (5 requests per minute)
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "Rate limit exceeded"
+security: []

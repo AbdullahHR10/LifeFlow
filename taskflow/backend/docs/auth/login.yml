@@ -1,0 +1,65 @@
+tags:
+  - Authentication
+summary: Login user
+description: Authenticates a user with email and password credentials
+parameters:
+  - in: body
+    name: credentials
+    description: User login credentials
+    required: true
+    schema:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: "user@example.com"
+        password:
+          type: string
+          format: password
+          description: User's password
+          example: "securePassword123"
+        remember:
+          type: boolean
+          description: Whether to remember the user session
+          example: false
+          default: false
+responses:
+  200:
+    description: User successfully logged in
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "User logged in successfully!"
+  401:
+    description: Invalid credentials
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "Invalid credentials"
+  429:
+    description: Rate limit exceeded (10 requests per minute)
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "Rate limit exceeded"
+security: []
