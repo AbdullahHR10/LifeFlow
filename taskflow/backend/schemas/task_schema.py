@@ -5,7 +5,7 @@ from ..utils.enums import Priority, Category
 
 class TaskSchema(Schema):
     """Class that defines the schema of Task."""
-    title = fields.Str(required=True, validate=validate.Length(min=1))
+    title = fields.Str(required=True, validate=validate.Length(min=1, max=30))
     description = fields.Str(required=True, validate=validate.Length(min=1))
     priority = fields.Str(
         validate=validate.OneOf([priority.name for priority in Priority])

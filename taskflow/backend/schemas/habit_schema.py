@@ -5,7 +5,7 @@ from ..utils.enums import Frequency, Priority, Category, BackgroundColor
 
 class HabitSchema(Schema):
     """Class that defines the schema of Habit."""
-    title = fields.Str(required=True, validate=validate.Length(min=1))
+    title = fields.Str(required=True, validate=validate.Length(min=1,))
     description = fields.Str(required=False)
     frequency = fields.Str(
         required=True,
