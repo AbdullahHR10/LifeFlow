@@ -118,3 +118,18 @@ def logout():
         status="success",
         message="User logged out successfully."
     ), 200
+
+
+@auth_bp.route("/user", methods=["GET"])
+@swag_from(doc_path("auth/user.yml"))
+@login_required
+def get_current_user():
+    """Gets current user data."""
+    return json_response(
+    status="success",
+    data={
+        "id": current_user.id,
+        "name": current_user.name,
+        "email": current_user.email,
+        }
+    ), 200
