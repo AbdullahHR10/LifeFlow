@@ -27,6 +27,8 @@ class User(BaseModel, UserMixin):
     @password.setter
     def password(self, plain_password):
         """Hashes and sets the password."""
+        if not plain_password or not isinstance(plain_password, str):
+            raise ValueError("Password must be a non-empty string.")
         self._password = bcrypt.generate_password_hash(
             plain_password).decode('utf-8')
 
@@ -49,6 +51,8 @@ class User(BaseModel, UserMixin):
         Raises:
             ValueError: If the name is not between 3 and 30 characters.
         """
+        if value is None or not isinstance(value, str):
+            raise ValueError(f"{key} must be a non-empty string.")
         if len(value) > 30 or len(value) < 3:
             raise ValueError(f"{key} must be between 3 and 30 characters.")
 
@@ -69,6 +73,8 @@ class User(BaseModel, UserMixin):
         Raises:
             ValueError: If the email format is invalid.
         """
+        if value is None or not isinstance(value, str):
+            raise ValueError(f"{key} must be a non-empty string.")
         value = value.strip().lower()
         if value.count('@') != 1:
             raise ValueError(f"{key} must contain exactly one '@' character.")
