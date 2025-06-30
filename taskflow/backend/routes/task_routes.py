@@ -122,6 +122,22 @@ def complete_task(task):
     ), 200
 
 
+@task_bp.route("/<string:task_id>/incomplete", methods=["PATCH"])
+@swag_from(doc_path("task/incomplete_task.yml"))
+@limiter.limit("20 per minute")
+@login_required
+@ownership_required(Task)
+def incomplete_task(task):
+    """Marks task as incompleted."""
+    task.mark_incomplete()
+
+    return json_response(
+        status="success",
+        message="Task incompleted successfully",
+        data=task.to_dict()
+    ), 200
+
+
 @task_bp.route("/<string:task_id>", methods=["PATCH"])
 @swag_from(doc_path("task/edit_task.yml"))
 @limiter.limit("20 per minute")
