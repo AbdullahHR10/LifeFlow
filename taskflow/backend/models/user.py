@@ -3,7 +3,8 @@ from .base_model import BaseModel
 from flask_login import UserMixin
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship, validates
-from backend.extensions import bcrypt
+from ..extensions import bcrypt
+from ..utils.validators import validate_string_field
 
 
 class User(BaseModel, UserMixin):
@@ -42,7 +43,7 @@ class User(BaseModel, UserMixin):
         Validates the user's name.
 
         Parameters:
-            key (str): The name of the field being validated ('name').
+            key (str): The name of the field being validated.
             value (str): The name to validate.
 
         Returns:
@@ -51,11 +52,12 @@ class User(BaseModel, UserMixin):
         Raises:
             ValueError: If the name is not between 3 and 30 characters.
         """
-        if value is None or not isinstance(value, str):
-            raise ValueError(f"{key} must be a non-empty string.")
-        if len(value) > 30 or len(value) < 3:
-            raise ValueError(f"{key} must be between 3 and 30 characters.")
-
+        validate_string_field(
+            key=key,
+            value=value,
+            min_length=3,
+            max_length=30
+        )
         return value
 
     @validates("email")
