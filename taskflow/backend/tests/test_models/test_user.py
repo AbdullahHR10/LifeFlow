@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 
 
 def test_user_valid():
-    """Tests valid email format."""
+    """Tests valid user."""
     user = User(name="test", email="test@example.com")
     user.password = "123456"
 
