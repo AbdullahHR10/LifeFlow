@@ -33,10 +33,3 @@ class Task(BaseModel):
         self.completed = False
         self.completed_at = None
         self.save()
-
-    def update_task(self, **kwargs):
-        """Updates task fields with provided keyword arguments."""
-        for key, value in kwargs.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
-        self.save()
