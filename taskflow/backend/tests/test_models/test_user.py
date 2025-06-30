@@ -1,6 +1,5 @@
 """Module that contains User class tests."""
 import pytest
-from backend import db
 from backend.models import User
 from sqlalchemy.exc import IntegrityError
 
