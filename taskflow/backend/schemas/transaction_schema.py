@@ -7,7 +7,7 @@ class TransactionSchema(Schema):
     """Class that defines the schema of Transaction."""
     title = fields.Str(
         required=True,
-        validate=validate.Length(min=1, max=255)
+        validate=validate.Length(min=3, max=255)
     )
     description = fields.Str(
         validate=validate.Length(min=0)

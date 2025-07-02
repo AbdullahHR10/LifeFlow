@@ -5,7 +5,7 @@ from ..utils.enums import BackgroundColor
 
 class NoteSchema(Schema):
     """Class that defines the schema of Note."""
-    title = fields.Str(required=True, validate=validate.Length(min=1, max=30))
+    title = fields.Str(required=True, validate=validate.Length(min=3, max=30))
     content = fields.Str(required=True, validate=validate.Length(min=1))
     background_color = fields.Str(
         validate=validate.OneOf([color.name for color in BackgroundColor])
