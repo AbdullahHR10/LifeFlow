@@ -126,10 +126,10 @@ def logout():
 def get_current_user():
     """Gets current user data."""
     return json_response(
-    status="success",
-    data={
-        "id": current_user.id,
-        "name": current_user.name,
-        "email": current_user.email,
-        }
+        status="success",
+        data={
+            "id": current_user.id,
+            "name": current_user.name,
+            "email": current_user.email,
+            }
     ), 200
