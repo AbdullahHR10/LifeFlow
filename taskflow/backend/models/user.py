@@ -4,7 +4,7 @@ from flask_login import UserMixin
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship, validates
 from ..extensions import bcrypt
-from ..utils.validators import validate_string_field
+from ..utils.validators import validate_string_field, validate_email
 
 
 class User(BaseModel, UserMixin):
@@ -75,22 +75,4 @@ class User(BaseModel, UserMixin):
         Raises:
             ValueError: If the email format is invalid.
         """
-        if value is None or not isinstance(value, str):
-            raise ValueError(f"{key} must be a non-empty string.")
-        value = value.strip().lower()
-        if value.count('@') != 1:
-            raise ValueError(f"{key} must contain exactly one '@' character.")
-
-        if value.startswith('@') or value.endswith('@'):
-            raise ValueError(f"{key} cannot start or end with '@'.")
-
-        if value.startswith('.') or value.endswith('.'):
-            raise ValueError(f"{key} cannot start or end with '.'.")
-
-        if '..' in value:
-            raise ValueError(f"{key} cannot contain consecutive dots ('..').")
-
-        if '.' not in value.split('@')[1]:
-            raise ValueError(f"{key} must contain a dot ('.') after the '@'.")
-
-        return value
+        return validate_email(key, value)
