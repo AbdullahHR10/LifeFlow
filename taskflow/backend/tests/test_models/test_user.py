@@ -2,6 +2,7 @@
 import pytest
 from backend.models import User
 from sqlalchemy.exc import IntegrityError
+from marshmallow import ValidationError
 
 
 def test_user_valid():
@@ -19,73 +20,73 @@ def test_user_valid():
 
 def test_name_cannot_be_none_or_empty():
     """Tests name cannot be None or empty."""
-    with pytest.raises(ValueError, match="non-empty string"):
+    with pytest.raises(ValidationError, match="non-empty string"):
         User(name=None, email="test@example.com")
 
 
 def test_name_cannot_be_non_string():
     """Tests name cannot be a non-string."""
-    with pytest.raises(ValueError, match="non-empty string"):
+    with pytest.raises(ValidationError, match="non-empty string"):
         User(name=1, email="test@example.com")
 
 
 def test_name_must_be_less_than_31_chars():
     """Tests name must be less than 31 characters."""
-    with pytest.raises(ValueError, match="3 and 30 characters"):
+    with pytest.raises(ValidationError, match="3 and 30 characters"):
         User(name="a" * 31, email="test@gmail.com")
 
 
 def test_name_must_be_more_than_2_chars():
     """Tests name must be more than 2 characters."""
-    with pytest.raises(ValueError, match="3 and 30 characters"):
+    with pytest.raises(ValidationError, match="3 and 30 characters"):
         User(name="aa", email="test@gmail.com")
 
 
 def test_email_cannot_be_none_or_empty():
     """Tests email cannot be None or empty."""
-    with pytest.raises(ValueError, match="non-empty string"):
+    with pytest.raises(ValidationError, match="non-empty string"):
         User(name="test", email=None)
 
 
 def test_email_cannot_be_non_string():
     """Tests email cannot be a non-string."""
-    with pytest.raises(ValueError, match="non-empty string"):
+    with pytest.raises(ValidationError, match="non-empty string"):
         User(name="test", email=1)
 
 
 def test_email_must_have_at_sign():
     """Tests email cannot be an invalid value."""
-    with pytest.raises(ValueError, match="exactly one '@'"):
+    with pytest.raises(ValidationError, match="exactly one '@'"):
         User(name="test", email="")
 
 
 def test_email_cannot_start_or_end_with_at():
     """Tests email cannot start or end with at."""
-    with pytest.raises(ValueError, match="start or end with '@'"):
+    with pytest.raises(ValidationError, match="start or end with '@'"):
         User(name="test", email="@")
 
 
 def test_email_cannot_start_with_dot():
     """Tests email cannot start or end with dot."""
-    with pytest.raises(ValueError, match="start or end with '.'"):
+    with pytest.raises(ValidationError, match="start or end with '.'"):
         User(name="test", email=".@")
 
 
 def test_email_cannot_end_with_dot():
     """Tests email cannot start or end with dot."""
-    with pytest.raises(ValueError, match="start or end with '.'"):
+    with pytest.raises(ValidationError, match="start or end with '.'"):
         User(name="test", email="@.")
 
 
 def test_email_cannot_contain_consecutive_dots():
     """Tests email cannot contain consecutive dot."""
-    with pytest.raises(ValueError, match="consecutive dots"):
+    with pytest.raises(ValidationError, match="consecutive dots"):
         User(name="test", email="a@..com")
 
 
 def test_email_must_contain_a_dot():
     """Tests email must contain a dot after the at."""
-    with pytest.raises(ValueError, match="contain a dot"):
+    with pytest.raises(ValidationError, match="contain a dot"):
         User(name="test", email="a@com")
 
 
