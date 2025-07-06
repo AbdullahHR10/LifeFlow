@@ -90,11 +90,28 @@ def test_task_missing_description_raises(app):
 def test_task_title_too_long(app):
     """Tests task with a long title raises value error."""
     with pytest.raises(
-        ValidationError, 
+        ValidationError,
         match="between 3 and 30 characters"
     ):
         Task(
             title="a"*32,
+            description="desc",
+            priority=Priority.HIGH,
+            deadline=date.today(),
+            completed=False,
+            category=Category.WORK,
+            user_id="some-user-id"
+        )
+
+
+def test_task_title_too_short(app):
+    """Tests task with a short title raises value error."""
+    with pytest.raises(
+        ValidationError,
+        match="between 3 and 30 characters"
+    ):
+        Task(
+            title="aa",
             description="desc",
             priority=Priority.HIGH,
             deadline=date.today(),
