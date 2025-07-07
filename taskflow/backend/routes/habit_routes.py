@@ -79,17 +79,6 @@ def complete_habit(habit):
     """Marks habit as completed for the current streak."""
     habit.mark_complete()
 
-    from datetime import date
-
-    if habit.last_completed != date.today():
-        habit.current_streak += 1
-        habit.last_completed = date.today()
-
-        if habit.current_streak > habit.longest_streak:
-            habit.longest_streak = habit.current_streak
-
-        habit.save(refresh=True)
-
     return json_response(
         status="success",
         message="Habit marked as completed",
