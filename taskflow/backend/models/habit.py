@@ -5,6 +5,7 @@ from sqlalchemy import (Column, String, Integer, Date, Boolean, Text,
 from sqlalchemy.orm import relationship, validates
 from ..utils.enums import BackgroundColor, Priority, Category, Frequency
 from ..utils.validators import validate_string_field
+from datetime import date, timedelta
 
 
 class Habit(BaseModel):
@@ -49,3 +50,21 @@ class Habit(BaseModel):
             max_length=30
         )
         return value
+
+    def mark_complete(self):
+        """Marks the habit as completed for today."""
+        today = date.today()
+        if self.last_completed == today:
+            raise ValueError("Habit already completed today.")
+        yesterday = today - timedelta(days=1)
+        if self.last_completed == yesterday:
+            self.current_streak += 1
+        else:
+            self.current_streak = 1
+
+        self.last_completed = today
+
+        if self.current_streak > self.longest_streak:
+            self.longest_streak = self.current_streak
+
+        self.save()
