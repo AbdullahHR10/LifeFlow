@@ -2,8 +2,8 @@
 
 import pytest
 from backend import create_app, db
-from backend.models import User, Task
-from backend.utils.enums import Priority, Category
+from backend.models import User, Task, Habit, Note
+from backend.utils.enums import Frequency, Priority, Category, BackgroundColor
 from datetime import datetime, date
 
 
@@ -26,17 +26,7 @@ def client(app):
 
 @pytest.fixture
 def user(app):
-    user = User(
-        name="testuser",
-        email="testemail@example.com",
-    )
-    user.password = "123456"
-    user.save()
-    return user
-
-
-@pytest.fixture
-def user(app):
+    """User instance."""
     user = User(
         name="testuser",
         email="testemail@example.com",
@@ -48,6 +38,7 @@ def user(app):
 
 @pytest.fixture
 def task(app, user):
+    """Task instance."""
     task = Task(
         title="test",
         description="test",
@@ -60,6 +51,40 @@ def task(app, user):
     )
     task.save(refresh=True)
     return task
+
+
+@pytest.fixture
+def note(app, user):
+    """Note instance."""
+    note = Note(
+        title="test",
+        content="test",
+        background_color=BackgroundColor.BLUE,
+        user_id=user.id
+    )
+    note.save(refresh=True)
+    return note
+
+
+@pytest.fixture
+def habit(app, user):
+    """Habit instance."""
+    habit = Habit(
+        title="test",
+        description="test",
+        frequency=Frequency.DAILY,
+        target_count=1,
+        current_streak=1,
+        longest_streak=1,
+        last_completed=date(2025, 5, 1),
+        priority=Priority.HIGH,
+        category=Category.WORK,
+        is_active=True,
+        background_color=BackgroundColor.BLUE,
+        user_id=user.id
+    )
+    habit.save(refresh=True)
+    return habit
 
 
 @pytest.fixture
