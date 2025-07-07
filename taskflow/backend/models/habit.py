@@ -51,7 +51,7 @@ class Habit(BaseModel):
         )
         return value
 
-    def mark_complete(self):
+    def mark_complete(self) -> None:
         """Marks the habit as completed for today."""
         today = date.today()
         if self.last_completed == today:

@@ -46,13 +46,13 @@ class Task(BaseModel):
         )
         return value
 
-    def mark_complete(self):
+    def mark_complete(self) -> None:
         """Marks the task as completed."""
         self.completed = True
         self.completed_at = datetime.now()
         self.save()
 
-    def mark_incomplete(self):
+    def mark_incomplete(self) -> None:
         """Marks the task as incomplete."""
         self.completed = False
         self.completed_at = None

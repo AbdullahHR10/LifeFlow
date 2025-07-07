@@ -26,14 +26,14 @@ class User(BaseModel, UserMixin):
         raise AttributeError("Password is write-only.")
 
     @password.setter
-    def password(self, plain_password):
+    def password(self, plain_password: str) -> None:
         """Hashes and sets the password."""
         if not plain_password or not isinstance(plain_password, str):
             raise ValueError("Password must be a non-empty string.")
         self._password = bcrypt.generate_password_hash(
             plain_password).decode('utf-8')
 
-    def check_password(self, input_password):
+    def check_password(self, input_password: str) -> bool:
         """Checks the user's password."""
         return bcrypt.check_password_hash(self._password, input_password)
 
