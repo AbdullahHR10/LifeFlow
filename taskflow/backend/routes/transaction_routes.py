@@ -11,8 +11,8 @@ All routes require authentication, and most require ownership validation.
 from flask import Blueprint, request
 from flask_login import current_user, login_required
 from backend import limiter
-from ..models.transaction import Transaction
-from ..utils.db_helpers import build_object, edit_object, recalculate_budget
+from ..models import Budget, Transaction
+from ..utils.db_helpers import build_object, edit_object
 from ..utils.response import json_response
 from ..utils.logger import logger
 from flasgger import swag_from
@@ -25,6 +25,16 @@ transaction_bp = Blueprint('transaction_bp', __name__)
 transaction_schema = TransactionSchema()
 TRANSACTION_KEYS = ["title", "description", "amount",
                     "type", "date", "category"]
+
+
+def update_budget_spent_for_transaction(transaction: Transaction) -> None:
+    """Helper function that updates the budget based on a transaction."""
+    budget = Budget.query.filter_by(
+        user_id=transaction.user_id,
+        category=transaction.category
+    ).first()
+    if budget:
+        budget.recalculate_budget()
 
 
 @transaction_bp.route("/", methods=["GET"])
@@ -67,12 +77,7 @@ def create_transaction():
     logger.info(f"User {current_user.id} created transaction "
                 f"{new_transaction.id}")
 
-    recalculate_budget(
-        user_id=current_user.id,
-        category=new_transaction.category,
-        start_date=new_transaction.date,
-        end_date=new_transaction.date
-    )
+    update_budget_spent_for_transaction(new_transaction)
 
     return json_response(
         status="success",
@@ -92,12 +97,7 @@ def edit_transaction(transaction):
     transaction.save(refresh=True)
     logger.info(f"User {current_user.id} edited transaction {transaction.id}")
 
-    recalculate_budget(
-        user_id=current_user.id,
-        category=transaction.category,
-        start_date=transaction.date,
-        end_date=transaction.date
-    )
+    update_budget_spent_for_transaction(transaction)
 
     return json_response(
         status="success",
@@ -116,12 +116,7 @@ def delete_transaction(transaction):
     transaction.delete()
     logger.info(f"User {current_user.id} deleted transaction {transaction.id}")
 
-    recalculate_budget(
-        user_id=current_user.id,
-        category=transaction.category,
-        start_date=transaction.date,
-        end_date=transaction.date
-    )
+    update_budget_spent_for_transaction(transaction)
 
     return json_response(
         status="success",
