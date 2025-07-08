@@ -2,7 +2,15 @@
 from flask import abort, request
 from flask_login import current_user
 from backend import db
+from backend.models import Task, Habit, Budget, Transaction, Note
 import bleach
+
+
+def check_model(model: type):
+    """Checks if the model is available."""
+    Models = [Task, Habit, Budget, Transaction, Note]
+    if model not in Models:
+        abort(404, "This model is unavailable.")
 
 
 def sanitize_input(data: dict, keys: list[str]) -> dict:
@@ -38,6 +46,7 @@ def get_object(model: type, obj_id: str) -> object:
     Returns:
         object: The authorized object instance.
     """
+    check_model(model)
     obj = db.session.get(model, obj_id)
 
     if not obj or obj.user_id != current_user.id:
@@ -58,6 +67,7 @@ def build_object(model: type, keys: list[str], schema=None) -> object:
     Returns:
         An instance of `model` with the extracted data and user id.
     """
+    check_model(model)
     data = request.get_json()
 
     if schema:
