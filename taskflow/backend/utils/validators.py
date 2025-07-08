@@ -29,7 +29,7 @@ def validate_string_field(
         ValidationError: If the name is not between min_length
         and max_length characters.
     """
-    if value is None or not isinstance(value, str):
+    if value is None or not isinstance(value, str) or len(value) == 0:
         send_validation_error(key, "must be a non-empty string.")
     if len(value) > max_length or len(value) < min_length:
         send_validation_error(key, f"must be between {min_length} and "
