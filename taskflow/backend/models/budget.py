@@ -23,15 +23,15 @@ class Budget(BaseModel):
     user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
     user = relationship("User", back_populates="budgets")
 
-    def recalculate_budget(self, start_date: date, end_date: date) -> None:
+    def recalculate_budget(self,):
         """Recalculates and updates the spent amount for the user's budget."""
         expenses = Transaction.query.filter_by(
             user_id=self.user_id,
             category=self.category,
             type=TransactionType.EXPENSE
         ).filter(
-            Transaction.date >= start_date,
-            Transaction.date <= end_date
+            Transaction.date >= self.start_date,
+            Transaction.date <= self.end_date
         ).all()
 
         self.spent = sum(e.amount for e in expenses)
