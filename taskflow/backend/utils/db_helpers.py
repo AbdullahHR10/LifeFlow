@@ -1,5 +1,4 @@
 """Module that contains database helpers."""
-
 from flask import abort, request
 from flask_login import current_user
 from backend import db
@@ -42,7 +41,7 @@ def get_object(model: type, obj_id: str) -> object:
     obj = db.session.get(model, obj_id)
 
     if not obj or obj.user_id != current_user.id:
-        abort(404)
+        abort(404, "object not found or unauthorized")
 
     return obj
 
