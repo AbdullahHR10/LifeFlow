@@ -9,11 +9,13 @@ class TaskSchema(BaseSchema):
     title = fields.Str(required=True, validate=validate.Length(min=3, max=30))
     description = fields.Str(required=True, validate=validate.Length(min=1))
     priority = fields.Str(
+        required=True,
         validate=validate.OneOf([priority.name for priority in Priority])
     )
     deadline = fields.Date(required=True)
     completed = fields.Bool(required=False)
     category = fields.Str(
+        required=True,
         validate=validate.OneOf([category.name for category in Category])
     )
     completed_at = fields.DateTime(required=False)
