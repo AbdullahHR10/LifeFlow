@@ -1,9 +1,10 @@
 """Module that contains the Transaction schema."""
 from marshmallow import Schema, fields, validate
 from ..utils.enums import TransactionType, BudgetCategory
+from . import BaseSchema
 
 
-class TransactionSchema(Schema):
+class TransactionSchema(BaseSchema):
     """Class that defines the schema of Transaction."""
     title = fields.Str(
         required=True,

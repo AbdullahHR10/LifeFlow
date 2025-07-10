@@ -1,8 +1,9 @@
 """Module that contains the Auth schemas."""
-from marshmallow import Schema, fields, validate
+from marshmallow import fields, validate
+from . import BaseSchema
 
 
-class SignupSchema(Schema):
+class SignupSchema(BaseSchema):
     """Class that defines the schema of Signup."""
     name = fields.Str(
         required=True,
@@ -25,7 +26,7 @@ class SignupSchema(Schema):
             return errors
 
 
-class LoginSchema(Schema):
+class LoginSchema(BaseSchema):
     """Class that defines the schema of Login."""
     email = fields.Email(required=True)
     password = fields.Str(required=True)

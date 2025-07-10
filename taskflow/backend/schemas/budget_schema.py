@@ -1,9 +1,10 @@
 """Module that contains the Budget schema."""
-from marshmallow import Schema, fields, validate
+from marshmallow import fields, validate
 from ..utils.enums import BudgetCategory, BudgetPeriod
+from . import BaseSchema
 
 
-class BudgetSchema(Schema):
+class BudgetSchema(BaseSchema):
     """Class that defines the schema of Budget."""
     category = fields.Str(
         required=True,
