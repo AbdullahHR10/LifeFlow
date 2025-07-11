@@ -1,6 +1,6 @@
 """Module that contains the Budget schema."""
 from marshmallow import fields, validate
-from ..utils.enums import BudgetCategory, BudgetPeriod
+from ..utils.enums import BudgetCategory, Frequency
 from . import BaseSchema
 
 
@@ -20,7 +20,7 @@ class BudgetSchema(BaseSchema):
     )
     period = fields.Str(
         required=True,
-        validate=validate.OneOf([p.name for p in BudgetPeriod])
+        validate=validate.OneOf([p.name for p in Frequency])
     )
     start_date = fields.Date(required=True)
     end_date = fields.Date(required=True)

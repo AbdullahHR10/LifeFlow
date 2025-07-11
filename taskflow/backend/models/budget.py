@@ -4,10 +4,11 @@ from sqlalchemy import (Column, String, Float, Date,
                         ForeignKey, Enum as SqlEnum)
 from sqlalchemy.orm import relationship
 from ..utils.enums import (
-    BudgetCategory, BudgetPeriod, BudgetCategory, TransactionType
+    BudgetCategory, BudgetCategory, Frequency, TransactionType
 )
 from ..models.transaction import Transaction
 from datetime import date
+
 
 class Budget(BaseModel):
     """Represents a budget in the application."""
@@ -16,7 +17,7 @@ class Budget(BaseModel):
                       nullable=False)
     amount = Column(Float, nullable=False)
     spent = Column(Float, nullable=False, default=0.0)
-    period = Column(SqlEnum(BudgetPeriod, name="period_enum"), nullable=False)
+    period = Column(SqlEnum(Frequency, name="frequency_enum"), nullable=False)
     start_date = Column(Date, nullable=False)
     end_date = Column(Date, nullable=False)
 

@@ -46,12 +46,6 @@ class BudgetCategory(Enum):
     OTHER = "Other"
 
 
-class BudgetPeriod(Enum):
-    """Budget period enum."""
-    MONTHLY = "Monthly"
-    WEEKLY = "Weekly"
-
-
 class TransactionType(Enum):
     """Transaction type enum."""
     INCOME = "Income"
