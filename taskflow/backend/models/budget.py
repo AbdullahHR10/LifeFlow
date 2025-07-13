@@ -3,9 +3,7 @@ from .base_model import BaseModel
 from sqlalchemy import (Column, String, Float, Date,
                         ForeignKey, Enum as SqlEnum)
 from sqlalchemy.orm import relationship
-from ..utils.enums import (
-    BudgetCategory, BudgetCategory, Frequency, TransactionType
-)
+from ..utils.enums import BudgetCategory, Frequency, TransactionType
 from ..models.transaction import Transaction
 from datetime import date
 
