@@ -4,8 +4,8 @@ import pytest
 from backend import create_app, db
 from backend.models import User, Task, Habit, Budget, Transaction, Note
 from backend.utils.enums import (
-    Frequency, Priority, Category, BackgroundColor,
-    BudgetCategory, TransactionType
+    Frequency, Priority, Category,
+    BackgroundColor, BudgetCategory
 )
 from flask_login import login_user
 from datetime import datetime, date
