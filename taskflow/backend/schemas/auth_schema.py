@@ -1,5 +1,6 @@
 """Module that contains the Auth schemas."""
-from marshmallow import fields, validate
+from marshmallow import fields, validate, validates_schema
+from backend.utils.validators import send_validation_error
 from . import BaseSchema
 
 
@@ -16,15 +17,14 @@ class SignupSchema(BaseSchema):
     )
     confirm_password = fields.Str(required=True)
 
-    def validate(self, data, **kwargs):
+    @validates_schema
+    def validate_password_match(self, data, **kwargs):
         """Validation to ensure the passwords match."""
-        errors = super().validate(data)
         if data.get("password") != data.get("confirm_password"):
-            errors.setdefault(
+            send_validation_error(
                 "confirm_password",
-                []).append("Passwords do not match.")
-            return errors
-
+                "Passwords do not match."
+            )
 
 class LoginSchema(BaseSchema):
     """Class that defines the schema of Login."""
