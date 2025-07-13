@@ -2,8 +2,12 @@
 
 import pytest
 from backend import create_app, db
-from backend.models import User, Task, Habit, Note
-from backend.utils.enums import Frequency, Priority, Category, BackgroundColor
+from backend.models import User, Task, Habit, Budget, Transaction, Note
+from backend.utils.enums import (
+    Frequency, Priority, Category, BackgroundColor,
+    BudgetCategory, TransactionType
+)
+from flask_login import login_user
 from datetime import datetime, date
 
 
@@ -54,19 +58,6 @@ def task(app, user):
 
 
 @pytest.fixture
-def note(app, user):
-    """Note instance."""
-    note = Note(
-        title="test",
-        content="test",
-        background_color=BackgroundColor.BLUE,
-        user_id=user.id
-    )
-    note.save(refresh=True)
-    return note
-
-
-@pytest.fixture
 def habit(app, user):
     """Habit instance."""
     habit = Habit(
@@ -88,10 +79,48 @@ def habit(app, user):
 
 
 @pytest.fixture
+def budget(app, user):
+    """Budget instance."""
+    budget = Budget(
+        category=BudgetCategory.SALARY,
+        amount=50.0,
+        spent=0.0,
+        period=Frequency.WEEKLY,
+        start_date=date(2025, 5, 1),
+        end_date=date(2026, 5, 1),
+        user_id=user.id
+    )
+    budget.save(refresh=True)
+    return budget
+
+
+@pytest.fixture
+def transaction(app, user):
+    """Transaction instance."""
+    transaction = Transaction(
+        title="test",
+        content="test",
+        background_color=BackgroundColor.BLUE,
+        user_id=user.id
+    )
+    transaction.save(refresh=True)
+    return transaction
+
+
+@pytest.fixture
+def note(app, user):
+    """Note instance."""
+    note = Note(
+        title="test",
+        content="test",
+        background_color=BackgroundColor.BLUE,
+        user_id=user.id
+    )
+    note.save(refresh=True)
+    return note
+
+
+@pytest.fixture
 def logged_in_client(client, user):
     with client:
-        client.post("/auth/v1/login", json={
-            "email": user.email,
-            "password": "123456"
-        })
-        yield client
+        login_user(user)
