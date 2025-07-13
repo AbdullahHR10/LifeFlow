@@ -29,6 +29,13 @@ def client(app):
 
 
 @pytest.fixture
+def logged_in_client(client, user):
+    """Returns a Flask test client with a logged in user."""
+    with client:
+        login_user(user)
+
+
+@pytest.fixture
 def user(app):
     """User instance."""
     user = User(
@@ -118,9 +125,3 @@ def note(app, user):
     )
     note.save(refresh=True)
     return note
-
-
-@pytest.fixture
-def logged_in_client(client, user):
-    with client:
-        login_user(user)
