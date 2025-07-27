@@ -35,7 +35,7 @@ HABIT_KEYS = ["title", "description", "frequency", "target_count",
 def get_habits():
     """Gets paginated habits for the current user."""
     page = request.args.get("page", 1, type=int)
-    per_page = request.args.get("per_page", 8, type=int)
+    per_page = request.args.get("per_page", 12, type=int)
 
     pagination = Habit.query.filter_by(user_id=current_user.id) \
         .order_by(Habit.updated_at.desc()) \

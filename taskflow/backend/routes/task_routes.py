@@ -38,7 +38,7 @@ TASK_KEYS = ["title", "description", "priority", "deadline", "category"]
 def get_tasks():
     """Gets paginated tasks for the current user."""
     page = request.args.get("page", 1, type=int)
-    per_page = request.args.get("per_page", 8, type=int)
+    per_page = request.args.get("per_page", 12, type=int)
 
     pagination = Task.query.filter_by(user_id=current_user.id) \
         .order_by(Task.updated_at.desc()) \
