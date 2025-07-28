@@ -9,5 +9,6 @@ class NoteSchema(BaseSchema):
     title = fields.Str(required=True, validate=validate.Length(min=3, max=30))
     content = fields.Str(required=True, validate=validate.Length(min=1))
     background_color = fields.Str(
+        required=True,
         validate=validate.OneOf([color.name for color in BackgroundColor])
     )
