@@ -62,7 +62,7 @@ def create_app(config_name=None):
     api_v1.register_blueprint(transaction_bp, url_prefix='/transactions')
     api_v1.register_blueprint(note_bp, url_prefix='/notes')
 
-    app.register_blueprint(api_v1)
+    app.register_blueprint(api_v1, strict_slahes=False)
 
     from backend.models.base_model import BaseModel
     from backend.models.user import User
