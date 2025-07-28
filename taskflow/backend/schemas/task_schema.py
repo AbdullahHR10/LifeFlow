@@ -18,4 +18,4 @@ class TaskSchema(BaseSchema):
         required=True,
         validate=validate.OneOf([category.name for category in Category])
     )
-    completed_at = fields.DateTime(required=False)
+    completed_at = fields.DateTime(required=False, allow_none=True)
