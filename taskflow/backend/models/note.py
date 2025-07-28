@@ -11,7 +11,7 @@ class Note(BaseModel):
     __tablename__ = "notes"
     title = Column(String(30), nullable=False)
     content = Column(Text, nullable=False)
-    background_color = Column(SqlEnum(BackgroundColor), nullable=True)
+    background_color = Column(SqlEnum(BackgroundColor), nullable=False)
 
     user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
     user = relationship("User", back_populates="notes")
@@ -19,7 +19,7 @@ class Note(BaseModel):
     @validates("title")
     def validate_title(self, key: str, value: str) -> str:
         """
-        Validates the task's title.
+        Validates the note's title.
 
         Parameters:
             key (str): The name of the field being validated.

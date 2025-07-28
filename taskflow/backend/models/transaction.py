@@ -24,7 +24,7 @@ class Transaction(BaseModel):
     @validates("title")
     def validate_title(self, key: str, value: str) -> str:
         """
-        Validates the task's title.
+        Validates the transaction's title.
 
         Parameters:
             key (str): The name of the field being validated.
