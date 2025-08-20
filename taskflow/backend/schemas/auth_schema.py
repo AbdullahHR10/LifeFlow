@@ -26,6 +26,7 @@ class SignupSchema(BaseSchema):
                 "Passwords do not match."
             )
 
+
 class LoginSchema(BaseSchema):
     """Class that defines the schema of Login."""
     email = fields.Email(required=True)
