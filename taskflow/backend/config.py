@@ -1,6 +1,7 @@
 """Module that contains the Config class."""
 import os
-from redis import Redis
+from redis import Redis, exceptions as redis_exceptions
+from backend.utils.logger import logger
 
 
 class Config():
@@ -12,10 +13,19 @@ class Config():
     SESSION_PERMANENT = False
     SESSION_USE_SIGNER = True
     SESSION_KEY_PREFIX = 'taskflow:'
-    SESSION_REDIS = Redis(
-        host=os.environ.get("REDIS_HOST", "localhost"),
-        port=int(os.environ.get("REDIS_PORT", 6379))
-    )
+    try:
+        SESSION_REDIS = Redis(
+            host=os.environ.get("REDIS_HOST", "localhost"),
+            port=int(os.environ.get("REDIS_PORT", 6379)),
+            socket_connect_timeout=1,
+            socket_timeout=1,
+        )
+        SESSION_REDIS.ping()
+    except redis_exceptions.RedisError:
+        logger.warning("Redis not available, "
+                       "falling back to filesystem session storage.")
+        SESSION_TYPE = "filesystem"
+        SESSION_REDIS = None
 
 
 class TestConfig():
