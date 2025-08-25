@@ -10,13 +10,23 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from backend.utils.error_handlers import register_error_handlers
 from flasgger import Swagger
+import os
 
 
 Base = declarative_base()
-limiter = Limiter(
-    key_func=get_remote_address,
-    storage_uri="redis://localhost:6379"
-)
+
+if Config.SESSION_REDIS:
+    redis_host = os.environ.get("REDIS_HOST", "localhost")
+    redis_port = os.environ.get("REDIS_PORT", 6379)
+    limiter = Limiter(
+        key_func=get_remote_address,
+        storage_uri=f"redis://{redis_host}:{redis_port}"
+    )
+else:
+    limiter = Limiter(
+        key_func=get_remote_address,
+        storage_uri="memory://"
+    )
 
 
 def create_app(config_name=None):
@@ -37,6 +47,14 @@ def create_app(config_name=None):
     CORS(app, supports_credentials=True)
     login_manager = LoginManager()
     login_manager.init_app(app)
+
+    from backend.models.base_model import BaseModel
+    from backend.models.user import User
+    from backend.models.task import Task
+    from backend.models.habit import Habit
+    from backend.models.budget import Budget
+    from backend.models.transaction import Transaction
+    from backend.models.note import Note
 
     @login_manager.user_loader
     def load_user(id):
@@ -62,14 +80,6 @@ def create_app(config_name=None):
     api_v1.register_blueprint(transaction_bp, url_prefix='/transactions')
     api_v1.register_blueprint(note_bp, url_prefix='/notes')
 
-    app.register_blueprint(api_v1, strict_slahes=False)
-
-    from backend.models.base_model import BaseModel
-    from backend.models.user import User
-    from backend.models.task import Task
-    from backend.models.habit import Habit
-    from backend.models.budget import Budget
-    from backend.models.transaction import Transaction
-    from backend.models.note import Note
+    app.register_blueprint(api_v1, strict_slashes=False)
 
     return app
